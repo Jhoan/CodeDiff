@@ -44,7 +44,31 @@ class Program
 
 end
 
-#main calls of CodeDiff
+#common methods
+
+def is_var?(line) #return true if a line of code is a variable declaration
+	raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
+	specifier = Array.new(["void", "signed", "unsigned","short"])
+	type = Array.new(["long","char","int","float","double"])
+
+	tokens = line.split(" ")
+	if specifier.include? tokens[0] 
+		return true
+	end
+	if type.include? tokens[0] 
+		return true
+	end
+
+
+
+
+	return false
+end
+
+#int foo(char);
+#int foo(void)
+#int 
+#int a;#main calls of CodeDiff
 
 files = Array.new()
 next_file = String.new()
@@ -63,11 +87,14 @@ rescue
 	abort()
 end
 
+
 #Now we split the contents of the files into
 #arrays, using semicolons and new lines as delimiters.
 files.size.times do |i|
 	files[i] = files[i].gsub(";", "\n").split("\n").map(&:strip).reject(&:empty?)
 end
+
+
 
 programs = Array.new() #this will contain the programs
 
@@ -81,7 +108,7 @@ end
 programs.each do |p|
 	p.code.each do |line| 
 		puts "**** " 
-		line.each { |l|  puts l}
+		line.each { |l|  puts l if is_var? l }
 		puts "**** "
 	end
 end

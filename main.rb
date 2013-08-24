@@ -17,11 +17,14 @@ rescue
 	abort()
 end
 
+
 #Now we split the contents of the files into
 #arrays, using semicolons and new lines as delimiters.
 files.size.times do |i|
 	files[i] = files[i].gsub(";", "\n").split("\n").map(&:strip).reject(&:empty?)
 end
+
+
 
 programs = Array.new() #this will contain the programs
 
@@ -35,7 +38,7 @@ end
 programs.each do |p|
 	p.code.each do |line| 
 		puts "**** " 
-		line.each { |l|  puts l}
+		line.each { |l|  puts l if is_var? l }
 		puts "**** "
 	end
 end
