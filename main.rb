@@ -32,14 +32,31 @@ programs = Array.new() #this will contain the programs
 files.each { |file|  programs.push(Program.new(file))}
 
 programs.each do |p|
-	p.explode!
+	p.explode! 
 end
 
-programs.each do |p|
-	p.code.each do |line| 
-		puts "**** " 
-		line.each { |l|  puts l if is_var? l }
-		puts "**** "
-	end
-end
+#Get the names of every function
+
+
+#We analyze every line of each program
+#to get the number of variables
+
+
+
+# programs.each do |p|
+# 	p.code.each do |line| 
+# 		puts "**** " 
+# 		line.each do |l|
+# 			type = is_var? l
+# 			print l 
+# 			print " //var\n" if type == true
+# 			print " //func\n" if type == false
+# 			print " //none\n" if type == nil
+# 		end
+# 		puts "**** "
+# 	end
+# 	puts "====="
+# end
+
+
 

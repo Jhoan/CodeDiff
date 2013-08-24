@@ -1,7 +1,10 @@
 #include<stdio.h>
-int suma(int,int);
-int main(){
+/*int suma(int,int);*/
+int main(void){
 	int a,b;
+	float p[3];
+	float h[3];
+	char **j;
 	printf("Ingresa 2 numeros: ");
 	scanf("%d %d",&a,&b);
 	printf("La suma es: %d \n",suma(a,b));

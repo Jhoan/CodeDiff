@@ -46,23 +46,28 @@ end
 
 #common methods
 
-def is_var?(line) #return true if a line of code is a variable declaration
+#returns true if a line of code is a variable declaration, false if it's a function and nil if its neither
+def is_var?(line) 
+
 	raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
-	specifier = Array.new(["void", "signed", "unsigned","short"])
-	type = Array.new(["long","char","int","float","double"])
+	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	type = Array.new(["void","long","char","int","float","double"])
 
-	tokens = line.split(" ")
-	if specifier.include? tokens[0] 
-		return true
+	tokens = line.gsub(" ", ",").gsub("(", ",").gsub(")",",").split(",").map(&:strip).reject(&:empty?)
+	type_matches = 0
+	spec_matches = 0
+	tokens.each do |token|
+		if type.include? token then
+			type_matches += 1
+		end
+		if specifier.include? token then
+			spec_matches += 1
+		end
 	end
-	if type.include? tokens[0] 
-		return true
-	end
-
-
-
-
-	return false
+	return false if type_matches > 1
+	return true if spec_matches >= 0 && type_matches == 1
+	return nil
+	
 end
 
 #int foo(char);
@@ -105,11 +110,19 @@ programs.each do |p|
 	p.explode!
 end
 
+
 programs.each do |p|
 	p.code.each do |line| 
 		puts "**** " 
-		line.each { |l|  puts l if is_var? l }
+		line.each do |l|
+			type = is_var? l
+			print l 
+			print " //var\n" if type == true
+			print " //func\n" if type == false
+			print " //none\n" if type == nil
+		end
 		puts "**** "
 	end
+	puts "====="
 end
 
