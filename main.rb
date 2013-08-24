@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 #main calls of CodeDiff
 
 files = Array.new()
@@ -23,6 +22,21 @@ end
 files.size.times do |i|
 	files[i] = files[i].gsub(";", "\n").split("\n").map(&:strip).reject(&:empty?)
 end
-puts files[0].kind_of? Array
 
+programs = Array.new() #this will contain the programs
+
+#For further analysis we create an object for every file
+files.each { |file|  programs.push(Program.new(file))}
+
+programs.each do |p|
+	p.explode!
+end
+
+programs.each do |p|
+	p.code.each do |line| 
+		puts "**** " 
+		line.each { |l|  puts l}
+		puts "**** "
+	end
+end
 

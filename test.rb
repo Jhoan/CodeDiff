@@ -21,14 +21,13 @@ puts "***************"
 brace_count = 0
 output = Array.new()
 output.push(Array.new)
-i = 0
+index = 0
 code.each do |current_line| 
-	#puts current_line
 	if current_line.include? "{" 
 		brace_count+=1
 		if brace_count == 1
 			output.push(Array.new)
-			i+=1
+			index+=1
 		end
 	end	
 	
@@ -36,7 +35,7 @@ code.each do |current_line|
 		brace_count -= 1
 	end
 	
-	output[i].push(current_line)
+	output[index].push(current_line)
 end
 
 output.each do |arr|  
