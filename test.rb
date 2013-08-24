@@ -1,2 +1,4 @@
 #This file is for testing purposes only
-puts "Hola Mundo"
+2.times do |i|
+	puts i
+end
