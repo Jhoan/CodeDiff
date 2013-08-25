@@ -18,28 +18,6 @@ code = Array.new(["#include<stdio.h>",
 					"code",
 				"}"])
 
-vars = Hash.new()
-# code.each { |line| puts line }
-# puts "***************"
-brace_count = 0
-output = Array.new()
-output.push(Array.new)
-index = 0
-code.each do |current_line| 
-	if current_line.include? "{" 
-		brace_count+=1
-		if brace_count == 1
-			output.push(Array.new)
-			index+=1
-		end
-	end	
-	
-	if current_line.include? "}"
-		brace_count -= 1
-	end
-	
-	output[index].push(current_line)
-end
 
 def is_var?(line) 
 	raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
@@ -72,28 +50,42 @@ def is_var?(line)
 	
 end
 
-specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+def get_name(line) #returns the name of a function
+	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
 	type = Array.new(["void","long","char","int","float","double"])
-
-declarations = specifier + type
-
-line = "int **main&er      (int a,int b)"
-arr = line.gsub("*"," ").split(" ")
-puts arr
-puts "======"
-arr.each do |token|
-	if token.include? "(" then break end
-	puts token unless declarations.include? token
+	raise ArgumentError, "Expected a String but got #{line.class.name} instead" unless line.is_a? String
+	#raise ArgumentError, "Expected a function but got #{line} instead" unless is_var(line) == false
+	declarations = specifier + type
+	aux = line.gsub("*"," ").split(" ")
+	last_line = ""
+	name = nil
+	aux.each do |token|
+		last_line = token
+		if token.include? "(" then break end
+		name = token unless declarations.include? token
+	end
+	if name.nil? then
+		return last_line.slice(0,last_line.index("("))
+	else
+		return name
+	end
 
 end
 
+line = "float foo(int,char)"
+puts get_name(line)
 
 
-# output.each do |p|
-# 	p.each do |line|
-# 		is_var? line
+# code.each do |line|
+# 	puts line
+# 	puts get_name(line)
+# 	if is_var?(line) == false then
+# 		temp = line.gsub(get_name(line),"")
+# 		puts temp
 # 	end
 # end
+
+
 
 
 

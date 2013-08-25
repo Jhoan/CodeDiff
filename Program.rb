@@ -7,7 +7,7 @@ class Program
 	@code = Array.new()
 	@headers = Hash.new() 
 	@defines = Hash.new()
-	@functions = Hash.new() 
+	@functions = Hash.new(0) 
 	@vars = Hash.new() #Main variables only
 	def initialize(new_code)
 		raise ArgumentError, "Expected Array but got #{new_code.class.name}" unless new_code.kind_of? Array
@@ -17,7 +17,9 @@ class Program
 
 
 	def get_functions(code) #Returns an array with the function signatures in the code
-
+		@code.each do |line|
+			
+		end
 	
 	end
 	#Converts an array containing code into an array of arrays 
@@ -71,26 +73,33 @@ def is_var?(line)
 	return nil
 end
 
-def get_name(line) #returns the name of a function	
-	i = line.index("(")
-	len = 0
-	begin
-		i-=1
-		
-		if line[i] == " " && len == 0 then
-			begin
-				i-=1 
-			end until line[i] != " "
-		end
-		len+=1
-
-	end until line[i] == " "
-	return line.slice(i,len).strip
-
+def get_name(line) #returns the name of a function
+	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	type = Array.new(["void","long","char","int","float","double"])
+	raise ArgumentError, "Expected a String but got #{line.class.name} instead" unless line.is_a? String
+	#raise ArgumentError, "Expected a function but got #{line} instead" unless is_var(line) == false
+	declarations = specifier + type
+	aux = line.gsub("*"," ").split(" ")
+	last_line = ""
+	name = nil
+	aux.each do |token|
+		last_line = token
+		if token.include? "(" then break end
+		name = token unless declarations.include? token
+	end
+	if name.nil? then
+		return last_line.slice(0,last_line.index("("))
+	else
+		return name
+	end
 end
 def get_vars(function) #Get the variables of a function
 
 end
+
+	private :get_name 
+	private :get_vars
+	private :is_var?
 
 end
 
