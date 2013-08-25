@@ -3,7 +3,7 @@ int main(){
 	int a;
 	unsigned long int f;
 }
-float **foo (int *a[]){
+float **foo (int (*another)[333]){
 	return NULL;
 
 }

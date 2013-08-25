@@ -92,8 +92,6 @@ def explode!(code)
 						output.push(Array.new)
 						index+=1
 					end
-					
-					
 				end
 			end	
 		
@@ -106,18 +104,58 @@ def explode!(code)
 
 		return output
 end
+	def clean_function(line) #Removes everything but * inside parenthesis or brackets
+		output =  ""
+		flag = false
+		line.each_char do |chr|  
+			if chr == "(" || chr == "[" then
+				flag = true
+				output.concat(chr)
+			end
+			if chr == ")" || chr == "]" then
+				flag = false
+			end
+			if flag == false then
+				output.concat(chr)
+			else
+				output.concat(chr) if chr == "*" 
+			end
 
-ep = explode!(code)
-puts code
+		end
+		return output
+	end
 
-ep.each do |line|
-	puts "<<"
-	line.each { |e| puts "\t #{e}" }
-	puts ">>"
+line = "unsigned int** foo(int **some_name, float[] name, int (*a)[] )"
+output = []
+output = line.chomp('{').split("(",2)
+
+output[0] = output[0].gsub("foo","") #foo -> name
+
+temp = output[1].split(",")
+print output 
+print "\n"
+index = 1
+temp.each do |arg|
+	if arg.include? "(" then
+		output[index] = clean_function(arg).strip
+
+	else
+		#print get_name(arg) + "\n"
+		output[index] = arg.gsub(get_name(arg),"")
+	end
+	index += 1
 end
+print output
 
 
+# ep = explode!(code)
+# puts code
 
+# ep.each do |line|
+# 	puts "<<"
+# 	line.each { |e| puts "\t #{e}" }
+# 	puts ">>"
+# end
 
 
 # tokens = line.split(" ")

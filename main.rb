@@ -33,7 +33,9 @@ files.each { |file|  programs.push(Program.new(file))}
 
 programs.each do |p|
 	p.explode! 
+	p.get_functions
 end
+puts programs[0].functions
 
 #puts programs[0].code
 #Get the names of every function
@@ -44,16 +46,16 @@ end
 
 
 
-programs.each do |p|
-	p.code.each do |line| 
-		puts "<<<<" 
-		line.each do |l|
-			puts "\t #{l}"
-		end
-		puts ">>>> "
-	end
-	puts "====="
-end
+# programs.each do |p|
+# 	p.code.each do |line| 
+# 		puts "<<<<" 
+# 		line.each do |l|
+# 			puts "\t #{l}"
+# 		end
+# 		puts ">>>> "
+# 	end
+# 	puts "====="
+# end
 
 
 
