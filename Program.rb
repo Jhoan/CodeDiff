@@ -3,8 +3,8 @@ class Program
 	
 	def initialize(new_code)
 		raise ArgumentError, "Expected Array but got #{new_code.class.name}" unless new_code.kind_of? Array
-		@specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-		@type = Array.new(["void","long","char","int","float","double"])
+		@specifier = Array.new(["signed", "unsigned","short","long","const", "volatile"])
+		@type = Array.new(["void","char","int","float","double"])
 		@code = new_code
 		#We'll store the ocurrences in hashes: Name=>Count
 		#@code = Array.new()
@@ -15,17 +15,65 @@ class Program
 		@exploded = false
 		self.get_functions()
 		self.count_functions()
+		self.set_vars()
 	end
 
-	def set_vars() #Extracts and counts the variables from @code
+	def set_vars() #Extracts and counts the variables in @code
+		output = Hash.new(0)
 		self.explode! unless @exploded
-		@code.each do |block|
+		declarations = @specifier + @type
+		@code.each do |block| 
+			line_index = 0
 			block.each do |line|
-					tokens = line.split(,)
+				if is_var?(line) != true then #discard functions and code body
+					next 
 				end
-			
+				aux = line.gsub("*"," ").gsub("("," ").gsub(")"," ").split(" ")
+				spec = ""
+				name = ""
+				flag = false
+				aux.each do |token|
+					if declarations.include? token then
+						spec.concat(token+" ") 
+					else
+						token.each_char do |c|
+							if c == "[" then flag = true end
+							if flag == false then name.concat(c) end
+							if c == "]" then flag = false end
+						end
+					end
+
+				end
+				puts line
+				puts spec
+				name = name.split(",")
+				print "name: "
+				print name
+				print "\n"
+
+				
+				aux = line.gsub(spec,"").split(",")
+				print "aux: "
+				print aux
+				print "\n"
+
+				key = ""
+				index = 0
+				aux.each do |var|
+					key = spec + var.gsub(name[index],"")
+					puts "key: #{key}"
+					if key.include? "[" then
+						key = clean_function(key)
+					end
+					add_to_hash(output,key.strip)
+					index += 1
+				end
+				line_index += 1
+			end
 		end
+		@vars = output 
 	end
+
 	def get_functions() #Extract the functions from @code
 		self.explode! unless @exploded
 		@code.each do |block|
@@ -133,7 +181,7 @@ class Program
 		
 			output[index].push(current_line)
 		end
-		@exploded = false
+		@exploded = true
 		@code = output
 	end
 
@@ -156,6 +204,7 @@ class Program
 				spec_matches += 1
 			end
 		end
+		#print "TypeMatches: #{type_matches} SpecMatches: #{spec_matches}"
 		return false if type_matches > 1
 		return true if spec_matches >= 0 && type_matches == 1
 		return nil
@@ -217,8 +266,9 @@ class Program
 
 		attr_reader :code
 		attr_reader :functions
+		attr_reader :vars
 		private :get_name 
-		private :get_vars
+		
 		#private :is_var?
 
 

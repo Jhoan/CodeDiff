@@ -1,5 +1,5 @@
 #include<stdio.h>
-int main(){
+int main(void){
 	int a;
 	unsigned long int **ff,*o,i,l[2],(*c)[2];
 

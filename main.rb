@@ -31,15 +31,7 @@ programs = Array.new() #this will contain the programs
 #For further analysis we create an object for every file
 files.each { |file|  programs.push(Program.new(file))}
 
-#print functions
-count = 0
-programs.each do |program|
-	puts "---Program #{count}"
-	count += 1
-	program.functions.each do |key,value| 
-		puts "Key: #{key} Value: #{value} Signature: #{program.get_signature(key)}"
-	end
-end
+
 count = 0
 #print code
 programs.each do |program|
@@ -97,14 +89,19 @@ end
 # end
 
 
-#Print the signatures
+#Print the signatures and vars
 count = 0
 programs.each do |program|
 	puts "---Program #{count}"
 	count += 1
 	program.functions.each do |key,value| 
-		puts "Key: #{key} Value: #{value} Signature: #{program.get_signature(key)}"
+		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
+	end
+	puts program.vars
+	program.vars.each do |key,value|
+		puts "Type: #{key} Count: #{value}"
 	end
 end
 
+#Print vars
 
