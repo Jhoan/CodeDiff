@@ -2,13 +2,35 @@
 
 #Class function
 
-#Class: Program
+	def get_name(line) #returns the name of a function
+		raise ArgumentError, "Expected a String but got #{line.class.name} instead" unless line.is_a? String
+		specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+		type = Array.new(["void","long","char","int","float","double"])
+		#raise ArgumentError, "Expected a function but got #{line} instead" unless is_var(line) == false
+		declarations = specifier + type
+		aux = line.gsub("*"," ").split(" ")
+		last_line = ""
+		name = nil
+		aux.each do |token|
+			last_line = token
+			if token.include? "(" then break end
+			name = token unless declarations.include? token
+		end
+		if name.nil? then
+			return last_line.slice(0,last_line.index("("))
+		else
+			return name
+		end
+	end
+
+line =  "unsigned long int **ff,*o,i,l[2]"
+puts get_name(line)#Class: Program
 class Program
-	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-	type = Array.new(["void","long","char","int","float","double"])
 	
 	def initialize(new_code)
 		raise ArgumentError, "Expected Array but got #{new_code.class.name}" unless new_code.kind_of? Array
+		@specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+		@type = Array.new(["void","long","char","int","float","double"])
 		@code = new_code
 		#We'll store the ocurrences in hashes: Name=>Count
 		#@code = Array.new()
@@ -21,7 +43,15 @@ class Program
 		self.count_functions()
 	end
 
-
+	def set_vars() #Extracts and counts the variables from @code
+		self.explode! unless @exploded
+		@code.each do |block|
+			block.each do |line|
+					tokens = line.split(,)
+				end
+			
+		end
+	end
 	def get_functions() #Extract the functions from @code
 		self.explode! unless @exploded
 		@code.each do |block|
@@ -138,17 +168,17 @@ class Program
 	def is_var?(line) 
 
 		raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
-		#specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-		#type = Array.new(["void","long","char","int","float","double"])
+		
+		
 
 		tokens = line.gsub(" ", ",").gsub("(", ",").gsub(")",",").split(",").map(&:strip).reject(&:empty?)
 		type_matches = 0
 		spec_matches = 0
 		tokens.each do |token|
-			if type.include? token then
+			if @type.include? token then
 				type_matches += 1
 			end
-			if specifier.include? token then
+			if @specifier.include? token then
 				spec_matches += 1
 			end
 		end
@@ -159,10 +189,10 @@ class Program
 
 	def get_name(line) #returns the name of a function
 		raise ArgumentError, "Expected a String but got #{line.class.name} instead" unless line.is_a? String
-		specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-		type = Array.new(["void","long","char","int","float","double"])
+		# @specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+		# @type = Array.new(["void","long","char","int","float","double"])
 		#raise ArgumentError, "Expected a function but got #{line} instead" unless is_var(line) == false
-		declarations = specifier + type
+		declarations = @specifier + @type
 		aux = line.gsub("*"," ").split(" ")
 		last_line = ""
 		name = nil
@@ -176,6 +206,11 @@ class Program
 		else
 			return name
 		end
+	end
+
+	def get_type(line) #returns the data type declaration of a variable
+		name = get_name(line)
+		return gsub(name,"")
 	end
 
 	def clean_function(line) #Removes everything but * inside parenthesis or brackets
@@ -198,47 +233,19 @@ class Program
 		end
 		return output
 	end
-	def get_vars(function) #Get the variables of a function
-	end
+
+
 		attr_reader :code
 		attr_reader :functions
 		private :get_name 
 		private :get_vars
-		private :is_var?
+		#private :is_var?
 
 
 end
 
 #common methods
 
-#removes everything inside parenthesis and brakcets
-# line = "int (****a)[SOMETEXT]"
-# clean_arg =  ""
-# flag = false
-# line.each_char do |chr|  
-# 	if chr == "(" || chr == "[" then
-# 		flag = true
-# 		clean_arg.concat(chr)
-# 	end
-# 	if chr == ")" || chr == "]" then
-# 		flag = false
-# 	end
-# 	if flag == false then
-# 		clean_arg.concat(chr)
-# 	else
-# 		clean_arg.concat(chr) if chr == "*" 
-# 	end
-	
-
-# end
-# print clean_arg
-
-
-
-#int foo(char);
-#int foo(void)
-#int 
-#int a; 
 
 #main calls of CodeDiff
 
@@ -282,17 +289,30 @@ programs.each do |program|
 		puts "Key: #{key} Value: #{value} Signature: #{program.get_signature(key)}"
 	end
 end
-
 count = 0
 #print code
 programs.each do |program|
 	puts "==Program: #{count}=="
 	program.code.each do |block| 
-		block.each{ |line|  print "\t" +line + "\n"}
-		
+		block.each do |line| 
+		 	print "\t" +line 
+
+			case programs[0].is_var?(line)
+			when true
+				print "\t--Variable\n"
+			when false 
+				print"\t--Function\n"
+			when nil 
+				print "\n"
+			end
+		end
 	end
+		
+	
 	count += 1
 end
+
+#Count the functions
 # program_index = 0
 # block_index = 0
 # line_index = 0
@@ -326,7 +346,7 @@ end
 # end
 
 
-
+#Print the signatures
 count = 0
 programs.each do |program|
 	puts "---Program #{count}"

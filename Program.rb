@@ -1,10 +1,10 @@
 #Class: Program
 class Program
-	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-	type = Array.new(["void","long","char","int","float","double"])
 	
 	def initialize(new_code)
 		raise ArgumentError, "Expected Array but got #{new_code.class.name}" unless new_code.kind_of? Array
+		@specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+		@type = Array.new(["void","long","char","int","float","double"])
 		@code = new_code
 		#We'll store the ocurrences in hashes: Name=>Count
 		#@code = Array.new()
@@ -17,7 +17,15 @@ class Program
 		self.count_functions()
 	end
 
-
+	def set_vars() #Extracts and counts the variables from @code
+		self.explode! unless @exploded
+		@code.each do |block|
+			block.each do |line|
+					tokens = line.split(,)
+				end
+			
+		end
+	end
 	def get_functions() #Extract the functions from @code
 		self.explode! unless @exploded
 		@code.each do |block|
@@ -134,17 +142,17 @@ class Program
 	def is_var?(line) 
 
 		raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
-		#specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-		#type = Array.new(["void","long","char","int","float","double"])
+		
+		
 
 		tokens = line.gsub(" ", ",").gsub("(", ",").gsub(")",",").split(",").map(&:strip).reject(&:empty?)
 		type_matches = 0
 		spec_matches = 0
 		tokens.each do |token|
-			if type.include? token then
+			if @type.include? token then
 				type_matches += 1
 			end
-			if specifier.include? token then
+			if @specifier.include? token then
 				spec_matches += 1
 			end
 		end
@@ -155,10 +163,10 @@ class Program
 
 	def get_name(line) #returns the name of a function
 		raise ArgumentError, "Expected a String but got #{line.class.name} instead" unless line.is_a? String
-		specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-		type = Array.new(["void","long","char","int","float","double"])
+		# @specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+		# @type = Array.new(["void","long","char","int","float","double"])
 		#raise ArgumentError, "Expected a function but got #{line} instead" unless is_var(line) == false
-		declarations = specifier + type
+		declarations = @specifier + @type
 		aux = line.gsub("*"," ").split(" ")
 		last_line = ""
 		name = nil
@@ -172,6 +180,11 @@ class Program
 		else
 			return name
 		end
+	end
+
+	def get_type(line) #returns the data type declaration of a variable
+		name = get_name(line)
+		return gsub(name,"")
 	end
 
 	def clean_function(line) #Removes everything but * inside parenthesis or brackets
@@ -194,13 +207,19 @@ class Program
 		end
 		return output
 	end
-	def get_vars(function) #Get the variables of a function
+	def add_to_hash(hash,key)
+		if hash.has_key? key then
+			hash[key] += 1
+		else
+			hash[key] = 1
+		end
 	end
+
 		attr_reader :code
 		attr_reader :functions
 		private :get_name 
 		private :get_vars
-		private :is_var?
+		#private :is_var?
 
 
 end

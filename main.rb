@@ -40,17 +40,30 @@ programs.each do |program|
 		puts "Key: #{key} Value: #{value} Signature: #{program.get_signature(key)}"
 	end
 end
-
 count = 0
 #print code
 programs.each do |program|
 	puts "==Program: #{count}=="
 	program.code.each do |block| 
-		block.each{ |line|  print "\t" +line + "\n"}
-		
+		block.each do |line| 
+		 	print "\t" +line 
+
+			case programs[0].is_var?(line)
+			when true
+				print "\t--Variable\n"
+			when false 
+				print"\t--Function\n"
+			when nil 
+				print "\n"
+			end
+		end
 	end
+		
+	
 	count += 1
 end
+
+#Count the functions
 # program_index = 0
 # block_index = 0
 # line_index = 0
@@ -84,7 +97,7 @@ end
 # end
 
 
-
+#Print the signatures
 count = 0
 programs.each do |program|
 	puts "---Program #{count}"
