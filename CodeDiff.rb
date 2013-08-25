@@ -18,6 +18,7 @@ class Program
 		@vars = Hash.new() #Main variables only
 		@exploded = false
 		self.get_functions()
+		self.count_functions()
 	end
 
 
@@ -30,6 +31,32 @@ class Program
 		end
 	end
 
+	def count_functions() #Counts the function calls
+		line_index = 0
+		block_index = 0
+		@code.each do |block|
+			if block_index == 0 then #never compare the first block of a program STRUCT killer
+				block_index += 1
+				next
+			end
+			line_index = 0
+			block.each do |line|
+				@functions.each do |function,count|
+					#print "Line: #{line} Function: #{function} "
+					if line_index == 0 then #never compare the first line of a block
+						line_index += 1
+						break
+					end
+					if line.gsub(" ","").include? function+"(" then
+						@functions[function] = count + 1
+					end
+					#puts " Count: #{programs[program_index].functions[function]}\n"
+					line_index+=1
+				end
+			end
+			block_index += 1
+		end
+	end
 	def get_signature(function) #Returns the signature of a given function
 		@code.each do |block|
 			next unless block.first.include? "(" #skip structs
@@ -179,6 +206,7 @@ class Program
 		private :get_vars
 		private :is_var?
 
+
 end
 
 #common methods
@@ -265,37 +293,39 @@ programs.each do |program|
 	end
 	count += 1
 end
-program_index = 0
-block_index = 0
-line_index = 0
-programs.each do |program|
-	block_index = 0
-	program.code.each do |block|
-		if block_index == 0 then #never compare the first block of a program 
-			block_index += 1
-			next
-		end
-		line_index = 0
-		block.each do |line|
-			program.functions.each do |function,count|
-				print "Line: #{line} Function: #{function} "
-				if line_index == 0 then #never compare the first line of a block
-					line_index += 1
-					break
-				end
-				if line.gsub(" ","").include? function+"(" then
-					programs[program_index].functions[function] = count + 1
+# program_index = 0
+# block_index = 0
+# line_index = 0
+# programs.each do |program|
+# 	block_index = 0
+# 	program.code.each do |block|
+# 		if block_index == 0 then #never compare the first block of a program STRUCT killer
+# 			block_index += 1
+# 			next
+# 		end
+# 		line_index = 0
+# 		block.each do |line|
+# 			program.functions.each do |function,count|
+# 				print "Line: #{line} Function: #{function} "
+# 				if line_index == 0 then #never compare the first line of a block
+# 					line_index += 1
+# 					break
+# 				end
+# 				if line.gsub(" ","").include? function+"(" then
+# 					programs[program_index].functions[function] = count + 1
 
-				end
-				puts " Count: #{programs[program_index].functions[function]}\n"
-				line_index+=1
-			end
-		end
-		block_index += 1
-	end
-	program_index += 1
-	count += 1
-end
+# 				end
+# 				puts " Count: #{programs[program_index].functions[function]}\n"
+# 				line_index+=1
+# 			end
+# 		end
+# 		block_index += 1
+# 	end
+# 	program_index += 1
+# 	count += 1
+# end
+
+
 
 count = 0
 programs.each do |program|
