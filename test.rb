@@ -14,7 +14,8 @@ code = Array.new(["#include<stdio.h>",
 					"}",	
 				"return 0",
 				"}",
-				"float foo(int n,char d){",
+				"float foo(int n,char d)",
+				"{",
 					"code",
 				"}"])
 
@@ -72,21 +73,48 @@ def get_name(line) #returns the name of a function
 
 end
 
-line = "float foo(int,char)"
-puts get_name(line)
+def explode!(code)
+		brace_count = 0
+		index = 0
+		output = Array.new
+		output.push(Array.new)
+		code.each do |current_line| 
 
+			if current_line.include? "{" then
+				brace_count+=1
+				if brace_count == 1
+					if current_line.strip == "{" 
+						temp = output[index].pop
+						output.push(Array.new)
+						index+=1
+						output[index].push(temp)
+					else
+						output.push(Array.new)
+						index+=1
+					end
+					
+					
+				end
+			end	
+		
+			if current_line.include? "}"
+				brace_count -= 1
+			end
+		
+			output[index].push(current_line)
+		end
 
-# code.each do |line|
-# 	puts line
-# 	puts get_name(line)
-# 	if is_var?(line) == false then
-# 		temp = line.gsub(get_name(line),"")
-# 		puts temp
-# 	end
-# end
+		return output
+end
 
+ep = explode!(code)
+puts code
 
-
+ep.each do |line|
+	puts "<<"
+	line.each { |e| puts "\t #{e}" }
+	puts ">>"
+end
 
 
 

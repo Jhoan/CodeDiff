@@ -3,18 +3,31 @@
 #Class function
 #Class: Program
 class Program
+	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	type = Array.new(["void","long","char","int","float","double"])
 	attr_reader :code
 	#We'll store the ocurrences in hashes: Name=>Count
 	@code = Array.new()
 	@headers = Hash.new() 
 	@defines = Hash.new()
-	@functions = Hash.new() 
+	@functions = Hash.new(0) 
 	@vars = Hash.new() #Main variables only
 	def initialize(new_code)
 		raise ArgumentError, "Expected Array but got #{new_code.class.name}" unless new_code.kind_of? Array
 		@code = new_code
+
 	end
-	def explode! #Converts an array containing code into an array of arrays where every inner array is one level down
+
+
+	def get_functions(code) #Returns an array with the function signatures in the code
+		@code.each do |line|
+			
+		end
+	
+	end
+	#Converts an array containing code into an array of arrays 
+	#where every inner array is one block of code
+	def explode! 
 		brace_count = 0
 		index = 0
 		output = Array.new
@@ -39,19 +52,13 @@ class Program
 		@code = output
 	end
 
-	def get_vars(function) #Get the variable declarations of a function
-	end
 
-end
-
-#common methods
-
-#returns true if a line of code is a variable declaration, false if it's a function and nil if its neither
+#Returns true if a line of code is a variable declaration, false if it is a function or nil in any other case
 def is_var?(line) 
 
 	raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
-	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-	type = Array.new(["void","long","char","int","float","double"])
+	#specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	#type = Array.new(["void","long","char","int","float","double"])
 
 	tokens = line.gsub(" ", ",").gsub("(", ",").gsub(")",",").split(",").map(&:strip).reject(&:empty?)
 	type_matches = 0
@@ -67,8 +74,42 @@ def is_var?(line)
 	return false if type_matches > 1
 	return true if spec_matches >= 0 && type_matches == 1
 	return nil
-	
 end
+
+def get_name(line) #returns the name of a function
+	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	type = Array.new(["void","long","char","int","float","double"])
+	raise ArgumentError, "Expected a String but got #{line.class.name} instead" unless line.is_a? String
+	#raise ArgumentError, "Expected a function but got #{line} instead" unless is_var(line) == false
+	declarations = specifier + type
+	aux = line.gsub("*"," ").split(" ")
+	last_line = ""
+	name = nil
+	aux.each do |token|
+		last_line = token
+		if token.include? "(" then break end
+		name = token unless declarations.include? token
+	end
+	if name.nil? then
+		return last_line.slice(0,last_line.index("("))
+	else
+		return name
+	end
+end
+def get_vars(function) #Get the variables of a function
+
+end
+
+	private :get_name 
+	private :get_vars
+	private :is_var?
+
+end
+
+#common methods
+
+
+
 
 #int foo(char);
 #int foo(void)
@@ -107,22 +148,28 @@ programs = Array.new() #this will contain the programs
 files.each { |file|  programs.push(Program.new(file))}
 
 programs.each do |p|
-	p.explode!
+	p.explode! 
 end
+
+#puts programs[0].code
+#Get the names of every function
+
+
+#We analyze every line of each program
+#to get the number of variables
+
 
 
 programs.each do |p|
 	p.code.each do |line| 
-		puts "**** " 
+		puts "<<<<" 
 		line.each do |l|
-			type = is_var? l
-			print l 
-			print " //var\n" if type == true
-			print " //func\n" if type == false
-			print " //none\n" if type == nil
+			puts "\t #{l}"
 		end
-		puts "**** "
+		puts ">>>> "
 	end
 	puts "====="
 end
+
+
 

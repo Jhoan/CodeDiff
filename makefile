@@ -3,8 +3,8 @@ NAMES=Function Program common main
 SOURCES=$(addsuffix .rb,$(addprefix ./,$(NAMES)))
 
 all: clean
-	cat $(SOURCES) > CodeDiff.rb
-	chmod 755 CodeDiff.rb
+	@cat $(SOURCES) > CodeDiff.rb
+	@chmod 755 CodeDiff.rb
 
 clean:
-	rm -rf CodeDiff.rb
+	@rm -rf CodeDiff.rb

@@ -35,6 +35,7 @@ programs.each do |p|
 	p.explode! 
 end
 
+#puts programs[0].code
 #Get the names of every function
 
 
@@ -43,20 +44,16 @@ end
 
 
 
-# programs.each do |p|
-# 	p.code.each do |line| 
-# 		puts "**** " 
-# 		line.each do |l|
-# 			type = is_var? l
-# 			print l 
-# 			print " //var\n" if type == true
-# 			print " //func\n" if type == false
-# 			print " //none\n" if type == nil
-# 		end
-# 		puts "**** "
-# 	end
-# 	puts "====="
-# end
+programs.each do |p|
+	p.code.each do |line| 
+		puts "<<<<" 
+		line.each do |l|
+			puts "\t #{l}"
+		end
+		puts ">>>> "
+	end
+	puts "====="
+end
 
 
 
