@@ -1,5 +1,7 @@
 #Class: Program
 class Program
+	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	type = Array.new(["void","long","char","int","float","double"])
 	attr_reader :code
 	#We'll store the ocurrences in hashes: Name=>Count
 	@code = Array.new()
@@ -50,8 +52,8 @@ class Program
 def is_var?(line) 
 
 	raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
-	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
-	type = Array.new(["void","long","char","int","float","double"])
+	#specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	#type = Array.new(["void","long","char","int","float","double"])
 
 	tokens = line.gsub(" ", ",").gsub("(", ",").gsub(")",",").split(",").map(&:strip).reject(&:empty?)
 	type_matches = 0
@@ -84,7 +86,7 @@ def get_name(line) #returns the name of a function
 
 	end until line[i] == " "
 	return line.slice(i,len).strip
-	
+
 end
 def get_vars(function) #Get the variables of a function
 

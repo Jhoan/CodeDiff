@@ -72,22 +72,20 @@ def is_var?(line)
 	
 end
 
+specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
+	type = Array.new(["void","long","char","int","float","double"])
 
-line = "float     **foo      (int a,int b)"
-i = line.index("(")
-len = 0
-begin
-	i-=1
-	
-	if line[i] == " " && len == 0 then
-		begin
-			i-=1 
-		end until line[i] != " "
-	end
-	len+=1
+declarations = specifier + type
 
-end until line[i] == " "
-puts line.slice(i,len).strip
+line = "int **main&er      (int a,int b)"
+arr = line.gsub("*"," ").split(" ")
+puts arr
+puts "======"
+arr.each do |token|
+	if token.include? "(" then break end
+	puts token unless declarations.include? token
+
+end
 
 
 
