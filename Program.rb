@@ -46,7 +46,24 @@ class Program
 					end
 					index += 1
 				end
-				return output.join(" ")
+				formatted_output = ""
+				index = 0
+				output.each do |e|
+					if index == 0 then
+						formatted_output += "( " + e.strip + " ) "
+					else
+						if index == 1 then
+							formatted_output += "( "
+						end
+						if index > 1 then
+							formatted_output += ", "
+						end
+						formatted_output += e.strip == "" ? "void" : e.strip
+
+					end
+					index += 1
+				end
+				return formatted_output + " )"
 			end
 		end
 		return nil

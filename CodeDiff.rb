@@ -37,10 +37,7 @@ class Program
 			if function.strip == name.strip
 				output = []
 				output = block.first.chomp('{').split("(",2)
-
 				output[0] = output[0].gsub(name,"")
-				
-				
 				temp = output[1].split(",") #split the args
 				index = 1
 				temp.each do |arg|
@@ -53,7 +50,24 @@ class Program
 					end
 					index += 1
 				end
-				return output.join(" ")
+				formatted_output = ""
+				index = 0
+				output.each do |e|
+					if index == 0 then
+						formatted_output += "( " + e.strip + " ) "
+					else
+						if index == 1 then
+							formatted_output += "( "
+						end
+						if index > 1 then
+							formatted_output += ", "
+						end
+						formatted_output += e.strip == "" ? "void" : e.strip
+
+					end
+					index += 1
+				end
+				return formatted_output + " )"
 			end
 		end
 		return nil
@@ -202,7 +216,7 @@ end
 
 files = Array.new()
 next_file = String.new()
-raise ArgumentError, "Two filenames expected." unless ARGV.size == 2
+raise ArgumentError, "Two filenames expected." unless ARGV.size >= 2
 #We make sure we can read the files 
 begin
 	ARGV.each  do |arg|
@@ -231,34 +245,58 @@ programs = Array.new() #this will contain the programs
 #For further analysis we create an object for every file
 files.each { |file|  programs.push(Program.new(file))}
 
-# programs.each do |p|
-# 	p.explode! 
-# 	p.get_functions
-# end
-programs[0].functions.each do |key,value| 
-	puts "Key: #{key} Value: #{value} Signature #{programs[0].get_signature(key)}"
-
+#print functions
+count = 0
+programs.each do |program|
+	puts "---Program #{count}"
+	count += 1
+	program.functions.each do |key,value| 
+		puts "Key: #{key} Value: #{value} Signature: #{program.get_signature(key)}"
+	end
 end
 
-#puts programs[0].code
-#Get the names of every function
+count = 0
+#print code
+programs.each do |program|
+	puts "==Program: #{count}=="
+	program.code.each do |block| 
+		block.each{ |line|  print "\t" +line + "\n"}
+		
+	end
+	count += 1
+end
+program_index = 0
+line_index = 0
+programs.each do |program|
+	program.code.each do |block|
+		line_index = 0
+		block.each do |line|
+			program.functions.each do |function,count|
+				print "Line: #{line} Function: #{function} "
+				if line_index == 0 then #never compare the first line of a block
+					line_index += 1
+					break
+				end
+				if line.gsub(" ","").include? function+"(" then
+					programs[program_index].functions[function] = count + 1
 
+				end
+				puts " Count: #{programs[program_index].functions[function]}\n"
+				line_index+=1
+			end
+		end
+	end
+	program_index += 1
+	count += 1
+end
 
-#We analyze every line of each program
-#to get the number of variables
-
-
-
-# programs.each do |p|
-# 	p.code.each do |line| 
-# 		puts "<<<<" 
-# 		line.each do |l|
-# 			puts "\t #{l}"
-# 		end
-# 		puts ">>>> "
-# 	end
-# 	puts "====="
-# end
-
+count = 0
+programs.each do |program|
+	puts "---Program #{count}"
+	count += 1
+	program.functions.each do |key,value| 
+		puts "Key: #{key} Value: #{value} Signature: #{program.get_signature(key)}"
+	end
+end
 
 

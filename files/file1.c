@@ -7,6 +7,9 @@ int main(void){
 	printf("Ingresa 2 numeros: ");
 	scanf("%d %d",&a,&b);
 	printf("La suma es: %d \n",suma(a,b));
+	for (b = 0; b<10;b++)
+		a==b;
+	
 	return 0;
 }
 int suma(int i,int j){
