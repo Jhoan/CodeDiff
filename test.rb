@@ -125,7 +125,7 @@ end
 		return output
 	end
 
-line = "unsigned int** foo(int **some_name, float[] name, int (*a)[] )"
+line = " int foo(int a, float name, int (*a)[] )"
 output = []
 output = line.chomp('{').split("(",2)
 

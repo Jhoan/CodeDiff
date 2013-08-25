@@ -31,11 +31,14 @@ programs = Array.new() #this will contain the programs
 #For further analysis we create an object for every file
 files.each { |file|  programs.push(Program.new(file))}
 
-programs.each do |p|
-	p.explode! 
-	p.get_functions
+# programs.each do |p|
+# 	p.explode! 
+# 	p.get_functions
+# end
+programs[0].functions.each do |key,value| 
+	puts "Key: #{key} Value: #{value} Signature #{programs[0].get_signature(key)}"
+
 end
-puts programs[0].functions
 
 #puts programs[0].code
 #Get the names of every function

@@ -1,5 +1,4 @@
 #include<stdio.h>
-/*int suma(int,int);*/
 int main(void){
 	int a,b;
 	float p[3];

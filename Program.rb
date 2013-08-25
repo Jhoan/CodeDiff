@@ -12,10 +12,13 @@ class Program
 		@defines = Hash.new()
 		@functions = Hash.new(0) 
 		@vars = Hash.new() #Main variables only
+		@exploded = false
+		self.get_functions()
 	end
 
 
 	def get_functions() #Extract the functions from @code
+		self.explode! unless @exploded
 		@code.each do |block|
 			next unless block.first.include? "(" #skip structs
 			name = get_name(block.first)
@@ -23,8 +26,30 @@ class Program
 		end
 	end
 
-	def get_signature(name) #Returns the signature of a given function
-
+	def get_signature(function) #Returns the signature of a given function
+		@code.each do |block|
+			next unless block.first.include? "(" #skip structs
+			name = get_name(block.first)
+			if function.strip == name.strip
+				output = []
+				output = block.first.chomp('{').split("(",2)
+				output[0] = output[0].gsub(name,"")
+				temp = output[1].split(",") #split the args
+				index = 1
+				temp.each do |arg|
+					if arg.include? "(" then
+						#if its a pointer, then clean it
+						output[index] = clean_function(arg).strip
+					else
+						#otherwise just get the name and chomp it
+						output[index] = arg.chomp(get_name(arg)).strip
+					end
+					index += 1
+				end
+				return output.join(" ")
+			end
+		end
+		return nil
 	end 
 
 	#Converts an array containing code into an array of arrays 
@@ -56,7 +81,7 @@ class Program
 		
 			output[index].push(current_line)
 		end
-
+		@exploded = false
 		@code = output
 	end
 

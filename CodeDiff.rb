@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 #Class function
-a = " jkfdsj fdsj  "
-print a.strip#Class: Program
+
+#Class: Program
 class Program
 	specifier = Array.new(["signed", "unsigned","short","const", "volatile"])
 	type = Array.new(["void","long","char","int","float","double"])
@@ -16,10 +16,13 @@ class Program
 		@defines = Hash.new()
 		@functions = Hash.new(0) 
 		@vars = Hash.new() #Main variables only
+		@exploded = false
+		self.get_functions()
 	end
 
 
 	def get_functions() #Extract the functions from @code
+		self.explode! unless @exploded
 		@code.each do |block|
 			next unless block.first.include? "(" #skip structs
 			name = get_name(block.first)
@@ -27,8 +30,33 @@ class Program
 		end
 	end
 
-	def get_signature(name) #Returns the signature of a given function
+	def get_signature(function) #Returns the signature of a given function
+		@code.each do |block|
+			next unless block.first.include? "(" #skip structs
+			name = get_name(block.first)
+			if function.strip == name.strip
+				output = []
+				output = block.first.chomp('{').split("(",2)
 
+				output[0] = output[0].gsub(name,"")
+				
+				
+				temp = output[1].split(",") #split the args
+				index = 1
+				temp.each do |arg|
+					if arg.include? "(" then
+						#if its a pointer, then clean it
+						output[index] = clean_function(arg).strip
+					else
+						#otherwise just get the name and chomp it
+						output[index] = arg.chomp(get_name(arg)).strip
+					end
+					index += 1
+				end
+				return output.join(" ")
+			end
+		end
+		return nil
 	end 
 
 	#Converts an array containing code into an array of arrays 
@@ -60,7 +88,7 @@ class Program
 		
 			output[index].push(current_line)
 		end
-
+		@exploded = false
 		@code = output
 	end
 
@@ -142,26 +170,26 @@ end
 #common methods
 
 #removes everything inside parenthesis and brakcets
-line = "int (****a)[SOMETEXT]"
-clean_arg =  ""
-flag = false
-line.each_char do |chr|  
-	if chr == "(" || chr == "[" then
-		flag = true
-		clean_arg.concat(chr)
-	end
-	if chr == ")" || chr == "]" then
-		flag = false
-	end
-	if flag == false then
-		clean_arg.concat(chr)
-	else
-		clean_arg.concat(chr) if chr == "*" 
-	end
+# line = "int (****a)[SOMETEXT]"
+# clean_arg =  ""
+# flag = false
+# line.each_char do |chr|  
+# 	if chr == "(" || chr == "[" then
+# 		flag = true
+# 		clean_arg.concat(chr)
+# 	end
+# 	if chr == ")" || chr == "]" then
+# 		flag = false
+# 	end
+# 	if flag == false then
+# 		clean_arg.concat(chr)
+# 	else
+# 		clean_arg.concat(chr) if chr == "*" 
+# 	end
 	
 
-end
-print clean_arg
+# end
+# print clean_arg
 
 
 
@@ -203,11 +231,14 @@ programs = Array.new() #this will contain the programs
 #For further analysis we create an object for every file
 files.each { |file|  programs.push(Program.new(file))}
 
-programs.each do |p|
-	p.explode! 
-	p.get_functions
+# programs.each do |p|
+# 	p.explode! 
+# 	p.get_functions
+# end
+programs[0].functions.each do |key,value| 
+	puts "Key: #{key} Value: #{value} Signature #{programs[0].get_signature(key)}"
+
 end
-puts programs[0].functions
 
 #puts programs[0].code
 #Get the names of every function
