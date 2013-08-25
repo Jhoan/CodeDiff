@@ -266,9 +266,15 @@ programs.each do |program|
 	count += 1
 end
 program_index = 0
+block_index = 0
 line_index = 0
 programs.each do |program|
+	block_index = 0
 	program.code.each do |block|
+		if block_index == 0 then #never compare the first block of a program 
+			block_index += 1
+			next
+		end
 		line_index = 0
 		block.each do |line|
 			program.functions.each do |function,count|
@@ -285,6 +291,7 @@ programs.each do |program|
 				line_index+=1
 			end
 		end
+		block_index += 1
 	end
 	program_index += 1
 	count += 1

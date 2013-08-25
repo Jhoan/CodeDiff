@@ -20,6 +20,7 @@ int suma(int i,int j){
 }
 void foo(int** a, float (*some)[], unsigned long float omg)
 {
+	suma(ad,as);
 	return NULL;
 }
 
