@@ -28,6 +28,7 @@ class Program
 		self.count_functions()
 		self.set_vars()
 		self.get_defines()
+		self.count_defines()
 	end
 	def get_defines()
 		macro = ""
@@ -72,28 +73,43 @@ class Program
 					temp = []
 					temp.push(name)
 					temp.push(definition.gsub("\\",""))
-					output[temp] = 0
+					output[temp] = -1
 				end
 
 			end
 		end
 		@defines = output
 	end
+	def count_defines() #Counts define calls
+		@code.each do |block|
+			line_index = 0
+			block.each do |line|
+				@defines.each do |key,value|
+					if key[1].include? "(" then #macro
+						if line.gsub(" ","").include? key[0] + "(" then
+							@defines[key] += 1
+						end
+					else #constant
+						if line.gsub(" ","").include? key[0] then
+							@defines[key] += 1
+						end
+					end
+				end
+			end
+		end
+		# @defines.each do |key,value|
+		# 	@defines[key] -= 1 #-1 because of the definition
+		# 	#this allows a macro call inside another macro
+		# end
+	end
 	def set_vars() #Extracts and counts the variables in @code
 		output = Hash.new(0)
 		self.explode! unless @exploded
 		declarations = @specifier + @type
 		skip = true
-		@code.each do |block|
-			puts "Block===="
-			block.each do |line|
-				puts line
-			end
-			puts "====END BLOCK"
-		end
-		@code.each_with_index do |block, i|
-			#puts "===== #{block[0]} #{block[1]}"
-			if i == 0 then
+		
+		@code.each_with_index do |block, i|	
+			if i == 0 then #skip first block to avoid picking up a macro as a variable
 				next 
 			end
 			line_index = 0
