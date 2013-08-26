@@ -27,3 +27,9 @@ void foo(int** a, float (*some)[], unsigned long int omg)
 void boo(int** b, float (*bome)[], unsigned long float d){
 	return NULL;
 }
+long long int too(long long int a, long long int b, long long int b, long long int d, long long int f, long long int g){
+	return 0
+}
+long double roo(unsigned long int dfdsdfsdfsda, signed short int b, long long int b, long long int d, long long int f, long long int g, float **d){
+	return 0
+}

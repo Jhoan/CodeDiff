@@ -429,19 +429,7 @@ rescue
 	well... I'm afraid you encountered a bug :("
 	abort()
 end
-print " "
-print "=" * 71
-print "\n"
-print "|"
-print "\t" * 4
-print "Metric"
-print "\t" * ((50-24)/4).ceil
-print "\t |"
-print "\tA\t|\tB\t| |A-B| |"
-print "\n"
-print " "
-print "="*71
-print "\n"
+
 all_vars = Array.new()
 #Variables Report:
 #Recover all distinct variables
@@ -548,37 +536,23 @@ second_program_functions.each do |second_f|
 
 end
 
-print first_program_functions
-print "\n"
-print second_program_functions
-print "\n\n\n\n"
-print all_functions
+# print first_program_functions
+# print "\n"
+# print second_program_functions
+# print "\n\n\n\n"
+# print all_functions
 
 
-# all_functions.each do |key|
-# 	var_name = key.name
-# 	key.countA = 0
-# 	key.callsA = 0
-# 	if programs[0].functions.has_key? var_name then
-# 		key.countA += programs[0].vars[var_name]
+
+# prints data
+# count = 0
+# programs.each do |program|
+# 	puts "---Program #{count}"
+# 	count += 1
+# 	puts "\tFunctions: "
+# 	program.functions.each do |key,value| 
+# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
 # 	end
-# 	key.countB = 0	
-# 	if programs[1].vars.has_key? var_name then
-# 		key.countB += programs[1].vars[var_name]
-# 	end
-# end
-
-
-
-# prints vars
-count = 0
-programs.each do |program|
-	puts "---Program #{count}"
-	count += 1
-	puts "\tFunctions: "
-	program.functions.each do |key,value| 
-		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
-	end
 	# puts "\tVariables: "
 	# program.vars.each do |key,value|
 	# 	puts "Type: #{key} Count: #{value}"
@@ -603,126 +577,92 @@ programs.each do |program|
 # 	program.conditionals.each do |key,value|
 # 		puts "#\t\t#{key}: #{value}"
 # 	end
-end
+# end
 
+#Report Header
+print " "
+print "=" * 112 #112
+print "\n"
+print "|"
+print "\t" * 4
+print "Metric"
+print "\t" * ((112-24)/4).ceil
+print "\t|"
 
-
-
+print "\n"
+print " "
+print "="*112
+print "\n"
 
 
 #Var Report
 print " "
-print "=" * 71
+print "=" * 112
 print "\n"
 print "|"
 print "\t" * 4
 print "Variables"
-print "\t" * ((71-24)/4).ceil
-print "\t|"
+print "\t" * ((112-24)/4).ceil
+print "|"
 print "\n"
 print "|"
-print "-"*71
+print "-"*111
 print "|\n"
 all_vars.each do |key|
 	size = key.name.size + 1 #plus the first pipe
-	tabs = ((50-size)/4).ceil
-	puts "|#{key.name} " +"\t"*tabs+ " |\t#{key.countA}\t|\t#{key.countB}\t|\t#{(key.countA-key.countB).abs}\t|"
-	print "|"
-	print "-"*71
+	tabs = ((90-size)/4).ceil
+	if tabs > 0 then
+		print "|#{key.name} " +"\t"*tabs
+	else
+		if size > 63 then
+			print "|#{key.name.slice(0,60)} " + " " * 50 +"|\n"
+			print "|\t#{key.name.slice(60,key.name.size-60)}"
+			spaces = 90 - (key.name.size - 60) - 6
+			print " " * spaces
+		else
+			spaces = 63 - size
+			print "|#{key.name}" + " "*spaces
+		end
+	end
+	print "|\t#{key.countA}\t|\t#{key.countB}\t|\t#{(key.countA-key.countB).abs}\t|"
+	print "\n|"
+	print "-"*111
 	print "|\n"
 end
-#count = 0
-#print code
-# programs.each do |program|
-# 	puts "==Program: #{count}=="
-# 	program.code.each do |block| 
-# 		block.each do |line| 
-# 		 	print "\t" +line 
 
-# 			case programs[0].is_var?(line)
-# 			when true
-# 				print "\t--Variable\n"
-# 			when false 
-# 				print"\t--Function\n"
-# 			when nil 
-# 				print "\n"
-# 			end
-# 		end
-# 	end
-		
-	
-# 	count += 1
-# end
+#Function Report
+print " "
+print "=" * 112
+print "\n"
+print "|"
+print "\t" * 4
+print "Functions"
+print "\t" * ((112-24)/4).ceil
+print "|"
+print "\n"
+print "|"
+print "-"*111
+print "|\n"
 
-#Count the functions
-# program_index = 0
-# block_index = 0
-# line_index = 0
-# programs.each do |program|
-# 	block_index = 0
-# 	program.code.each do |block|
-# 		if block_index == 0 then #never compare the first block of a program STRUCT killer
-# 			block_index += 1
-# 			next
-# 		end
-# 		line_index = 0
-# 		block.each do |line|
-# 			program.functions.each do |function,count|
-# 				print "Line: #{line} Function: #{function} "
-# 				if line_index == 0 then #never compare the first line of a block
-# 					line_index += 1
-# 					break
-# 				end
-# 				if line.gsub(" ","").include? function+"(" then
-# 					programs[program_index].functions[function] = count + 1
+all_functions.each do |key|
+	size = key.name.size + 1 #plus the first pipe
+	tabs = ((90-size)/4).ceil
+	if tabs > 0 then
+		print "|#{key.name} " +"\t"*tabs
+	else
+		if size > 63 then
+			print "|#{key.name.slice(0,60)} " + " " * 50 +"|\n"
+			print "|\t#{key.name.slice(60,key.name.size-60)}"
+			spaces = 90 - (key.name.size - 60) - 6
+			print " " *spaces
 
-# 				end
-# 				puts " Count: #{programs[program_index].functions[function]}\n"
-# 				line_index+=1
-# 			end
-# 		end
-# 		block_index += 1
-# 	end
-# 	program_index += 1
-# 	count += 1
-# end
-
-
-#Print the signatures and vars
-# count = 0
-# programs.each do |program|
-# 	puts "---Program #{count}"
-# 	count += 1
-# 	puts "\tFunctions: "
-# 	program.functions.each do |key,value| 
-# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
-# 	end
-# 	#puts program.vars
-# 	puts "\tVariables: "
-# 	program.vars.each do |key,value|
-# 		puts "Type: #{key} Count: #{value}"
-# 	end
-# 	puts "\tDefines: "
-# 	 #print program.defines
-# 	program.defines.each do |key,value|
-# 		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
-# 	end
-
-# 	puts "\tIncludes: "
-# 	program.headers.each do |item|
-# 		puts "\t\t#{item}"
-# 	end
-
-# 	puts "\tLoops: "
-# 	program.loops.each do |key,value|
-# 		puts "\t\t#{key}: #{value}"
-# 	end
-
-# 	puts "\tCOnditionals: "
-# 	program.conditionals.each do |key,value|
-# 		puts "#\t\t#{key}: #{value}"
-# 	end
-# end
-
-#Print vars
-
+		else
+			spaces = 63 - size
+			print "|#{key.name}" + " "*spaces
+		end
+	end
+	print " |#{key.count}| #{key.calls}  |#{key.countB}| #{key.callsB}   |#{(key.count-key.countB).abs}| #{(key.calls-key.callsB).abs}   |"
+	print "\n|"	
+	print "-"*111
+	print "|\n"
+end
