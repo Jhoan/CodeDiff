@@ -13,8 +13,13 @@ class Program
 		@functions = Hash.new(0) 
 		@vars = Hash.new()
 		@exploded = false
-		@loops = {:for => 0,:while => 0}
-		@conditionals = {:if => 0, :switch => 0}
+		#@loops = {:for => 0,:while => 0}
+		#@conditionals = {:if => 0, :switch => 0}
+		@for = 0
+		@while = 0
+		@if = 0
+		@switch = 0
+
 		self.get_functions()
 		self.count_functions()
 		self.set_vars()
@@ -30,13 +35,13 @@ class Program
 				line = line.gsub(" ","")
 				#puts "===#{line}"
 				if line.start_with? "if(" then
-					@conditionals[:if] += 1
+					@if += 1
 				elsif line.start_with? "switch(" then
-					@conditionals[:switch] += 1
+					@switch += 1
 				elsif line.start_with? "for(" then
-					@loops[:for] += 1
+					@for += 1
 				elsif line.include? "while(" then
-					@loops[:while] += 1
+					@while += 1
 				end
 			end
 		end
@@ -381,8 +386,10 @@ class Program
 		attr_reader :vars
 		attr_reader :defines
 		attr_reader :headers
-		attr_reader :loops
-		attr_reader :conditionals
+		attr_reader :if
+		attr_reader :for
+		attr_reader :while
+		attr_reader :switch
 
 
 end

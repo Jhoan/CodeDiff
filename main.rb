@@ -213,6 +213,40 @@ all_headers.each do |key|
 	end
 end
 
+#loops and conditionals
+all_control_structures = Array.new
+
+
+if programs[0].if > 0 || programs[1].if  > 0
+	temp = OpenStruct.new
+	temp.name = "if"
+	temp.countA = programs[0].if > 0 ? programs[0].if : 0
+	temp.countB = programs[1].if > 0 ? programs[1].if : 0
+	all_control_structures.push(temp)
+end
+if programs[0].for > 0 || programs[1].for > 0
+	temp = OpenStruct.new
+	temp.name = "for"
+	temp.countA = programs[0].for > 0 ? programs[0].for : 0
+	temp.countB = programs[1].for > 0 ? programs[1].for : 0
+	all_control_structures.push(temp)
+end
+if programs[0].while > 0 || programs[1].while > 0
+	temp = OpenStruct.new
+	temp.name = "while"
+	temp.countA = programs[0].while > 0 ? programs[0].while : 0
+	temp.countB = programs[1].while > 0 ? programs[1].while : 0
+	all_control_structures.push(temp)
+end
+if programs[0].switch > 0 || programs[1].switch  > 0
+	temp = OpenStruct.new
+	temp.name = "switch"
+	temp.countA = programs[0].switch > 0 ? programs[0].switch : 0
+	temp.countB = programs[1].switch > 0 ? programs[1].switch : 0
+	all_control_structures.push(temp)
+end
+
+
 #Report Header
 print " "
 print "=" * 112 #112
@@ -373,4 +407,50 @@ all_headers.each do |key|
 	print "|\n"
 end
 
+#Control Strunctures Report
+print " "
+print "=" * 112
+print "\n"
+print "|"
+print "\t" * 4
+print "Other    "
+print "\t" * ((112-24)/4).ceil
+print "|"
+print "\n"
+print "|"
+print "-"*111
+print "|\n"
+
+index = 0
+all_control_structures.each do |key|
+	print "|#{key.name}"
+	print "\t"*21 + "|\t#{key.countA}\t|\t#{key.countB}\t|\t#{(key.countA-key.countB).abs}\t|"
+	print "\n|"
+	print "-"*111
+	print "|\n"
+	index += 1
+end
+
+#footer
+counts = 0
+calls = 0
+all_functions.each do |key|
+	counts += (key.count-key.countB).abs
+	calls += (key.calls-key.callsB).abs
+end
+all_defines.each do |key|
+	counts += (key.count-key.countB).abs
+	calls += (key.calls-key.callsB).abs
+end
+all_vars.each do |key|
+	calls += (key.countA-key.countB).abs
+end
+all_headers.each do |key|
+	calls += (key.countA-key.countB).abs
+end
+all_control_structures.each do |key|
+	calls += (key.countA-key.countB).abs
+end
+
+print "\t" * 23 + "Subtotal: \t|#{counts}|\t#{calls}\t|"
 

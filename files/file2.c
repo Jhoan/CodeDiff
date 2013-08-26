@@ -16,7 +16,9 @@ int main(void){
 	scanf("%d %d",&a,&b);
 	printf("La suma es: %d \n",suma(a,b));
 	foo(arg,arg2,arg3);
-
+	while (true){
+		a=1;
+	}
 	return 0;
 }
 int suma(int i,int j){
