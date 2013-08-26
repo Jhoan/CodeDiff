@@ -72,9 +72,15 @@ class Program
 		output = Hash.new(0)
 		self.explode! unless @exploded
 		declarations = @specifier + @type
-		@code.each do |block| 
+		skip = true
+		
+		@code.each_with_index do |block, i|	
+			if i == 0 then #skip first block to avoid picking up a macro as a variable
+				next 
+			end
 			line_index = 0
 			block.each do |line|
+				puts line
 				if is_var?(line) != true then #discard functions and code body
 					next 
 				end

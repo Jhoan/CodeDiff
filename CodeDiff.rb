@@ -1,15 +1,14 @@
 #!/usr/bin/env ruby
-
-hash = {}
-a = ["getc","getc(p) ..."]
-hash[a] = 0
-
-
-hash.each do |key,value|
-	key.each { |k| print k+" "}
-	print "#{value} "
-	#puts "#{key[0]} #{value}"
+a = [["#define somethin","multiline","end"],["int main()","etc..."]]
+a.each_with_index do |block,i|
+	if i == 0 then
+		next
+	end
+	block.each do |line|
+		puts line
+	end
 end
+
 #Class: Program
 class Program
 	
@@ -84,9 +83,22 @@ class Program
 		output = Hash.new(0)
 		self.explode! unless @exploded
 		declarations = @specifier + @type
-		@code.each do |block| 
+		skip = true
+		@code.each do |block|
+			puts "Block===="
+			block.each do |line|
+				puts line
+			end
+			puts "====END BLOCK"
+		end
+		@code.each_with_index do |block, i|
+			#puts "===== #{block[0]} #{block[1]}"
+			if i == 0 then
+				next 
+			end
 			line_index = 0
 			block.each do |line|
+				puts line
 				if is_var?(line) != true then #discard functions and code body
 					next 
 				end
