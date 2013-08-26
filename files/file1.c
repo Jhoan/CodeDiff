@@ -1,4 +1,6 @@
 #include<stdio.h>
+#define N 3
+#include<stdlib.h>>
 int main(void){
 	int a,b;
 	float p[3];

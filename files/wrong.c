@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib>
 #define getc(p) (--(p)->cnt >= 0 \
        ? (unsigned char) \
 	   *(p)->ptr++ : _fillbuf(p))

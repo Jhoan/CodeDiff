@@ -108,6 +108,11 @@ programs.each do |program|
 	program.defines.each do |key,value|
 		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
 	end
+
+	puts "\tIncludes: "
+	program.headers.each do |item|
+		puts item
+	end
 end
 
 #Print vars

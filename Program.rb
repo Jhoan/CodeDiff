@@ -8,7 +8,7 @@ class Program
 		@code = new_code
 		#We'll store the ocurrences in hashes: Name=>Count
 		#@code = Array.new()
-		@headers = Hash.new() 
+		@headers = Array.new(0)
 		@defines = Hash.new()
 		@functions = Hash.new(0) 
 		@vars = Hash.new() #Main variables only
@@ -18,6 +18,18 @@ class Program
 		self.set_vars()
 		self.get_defines()
 		self.count_defines()
+		self.set_headers()
+	end
+	def set_headers()
+		#theoretically, the #include directives can be placed anywhere in the code
+		#but this program will only check in the first block because thats the convention
+		@code[0].each do |line|
+			if line.start_with? "#include" then
+				#puts "====#{line}===="
+				@headers.push(line[8..-1])
+			end
+		end
+		#print @headers
 	end
 	def get_defines()
 		macro = ""
@@ -347,6 +359,7 @@ class Program
 		attr_reader :functions
 		attr_reader :vars
 		attr_reader :defines
+		attr_reader :headers
 		private :get_name 
 		
 		#private :is_var?
