@@ -125,27 +125,27 @@ end
 		return output
 	end
 
-line = " int foo(int a, float name, int (*a)[] )"
-output = []
-output = line.chomp('{').split("(",2)
+# line = " int foo(int a, float name, int (*a)[] )"
+# output = []
+# output = line.chomp('{').split("(",2)
 
-output[0] = output[0].gsub("foo","") #foo -> name
+# output[0] = output[0].gsub("foo","") #foo -> name
 
-temp = output[1].split(",")
-print output 
-print "\n"
-index = 1
-temp.each do |arg|
-	if arg.include? "(" then
-		output[index] = clean_function(arg).strip
+# temp = output[1].split(",")
+# print output 
+# print "\n"
+# index = 1
+# temp.each do |arg|
+# 	if arg.include? "(" then
+# 		output[index] = clean_function(arg).strip
 
-	else
-		#print get_name(arg) + "\n"
-		output[index] = arg.gsub(get_name(arg),"")
-	end
-	index += 1
-end
-print output
+# 	else
+# 		#print get_name(arg) + "\n"
+# 		output[index] = arg.gsub(get_name(arg),"")
+# 	end
+# 	index += 1
+# end
+# print output
 
 
 # ep = explode!(code)
@@ -165,3 +165,64 @@ print output
 # 	if type.include? tokens[0] 
 # 		return true
 # 	end
+
+#macro recognition
+file = ""
+File.open("files/wrong.c","r") do |f| 
+			file = f.read
+			f.close
+end
+puts file
+file = file.gsub(";", "\n").split("\n").map(&:strip).reject(&:empty?)
+code = explode!(file)
+macro = ""
+flag = false
+hash = {}
+code.each do |block|
+	flag = false
+	block.each do |line|
+		#puts "next: #{line}"
+		#puts "last_char: #{line.strip[-1]}"
+		if line.include?("#define") then
+			if line.strip[-1] != "\\" then #single line macro
+				temp = line.gsub("#define","").strip.split(" ",2)
+				name = temp[0]
+				definition = temp[1]
+			else #multiline macro
+				flag = true
+				macro.concat(line.gsub("#define","") + " ")
+			end
+		elsif flag == true #reading macro
+			if line.strip[-1] == "\\"
+				macro.concat(line)
+			else 
+				flag = false #stop reading macro
+				macro.concat(line)
+				macro = macro.strip
+				#puts "FINAL MACRO #{macro}"
+				index_delimiter = macro.index("(")
+				if macro.index(" ") < index_delimiter then
+					index_delimiter = macro.index(" ")
+				end
+				name = macro.slice(0,index_delimiter)
+				definition = macro
+				
+			end
+		else
+			#puts "else: #{line}"
+			next
+		end
+		#puts "macro: #{macro}"
+		if flag == false then
+			temp = []
+			temp.push(name)
+			temp.push(definition.gsub("\\",""))
+			hash[temp] = 0
+		end
+
+		
+		#hash[name + definition] = 0
+	end
+end
+
+print hash

@@ -46,24 +46,24 @@ class Program
 					end
 
 				end
-				puts line
-				puts spec
+				#puts line
+				#puts spec
 				name = name.split(",")
-				print "name: "
-				print name
-				print "\n"
+				#print "name: "
+				#print name
+				#print "\n"
 
 				
 				aux = line.gsub(spec,"").split(",")
-				print "aux: "
-				print aux
-				print "\n"
+				#print "aux: "
+				#print aux
+				#print "\n"
 
 				key = ""
 				index = 0
 				aux.each do |var|
 					key = spec + var.gsub(name[index],"")
-					puts "key: #{key}"
+					#puts "key: #{key}"
 					if key.include? "[" then
 						key = clean_function(key)
 					end
