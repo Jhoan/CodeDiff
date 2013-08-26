@@ -24,36 +24,139 @@ files.size.times do |i|
 	files[i] = files[i].gsub(";", "\n").split("\n").map(&:strip).reject(&:empty?)
 end
 
-
-
-programs = Array.new() #this will contain the programs
+	programs = Array.new() #this will contain the programs
 
 #For further analysis we create an object for every file
-files.each { |file|  programs.push(Program.new(file))}
-
-
-count = 0
-#print code
+#this, also, will extract all the information needed.
+begin
+	files.each { |file|  programs.push(Program.new(file))}
+rescue
+	puts "FATAL ERROR: It is recommended that you compile 
+	your code (using the -ANSI and -pedantic flags)
+	before executing this program. If you already did that then... 
+	well... I'm afraid you encountered a bug :("
+	abort()
+end
+print " "
+print "=" * 71
+print "\n"
+print "|"
+print "\t" * 4
+print "Metric"
+print "\t" * ((50-24)/4).ceil
+print "\t |"
+print "\tA\t|\tB\t| |A-B| |"
+print "\n"
+print " "
+print "="*71
+print "\n"
+all_vars = Array.new()
+#Variables Report:
+#Recover all distinct variables
 programs.each do |program|
-	puts "==Program: #{count}=="
-	program.code.each do |block| 
-		block.each do |line| 
-		 	print "\t" +line 
-
-			case programs[0].is_var?(line)
-			when true
-				print "\t--Variable\n"
-			when false 
-				print"\t--Function\n"
-			when nil 
-				print "\n"
-			end
-		end
+	program.vars.each_key do |var|
+		temp = OpenStruct.new
+		temp.name = var
+		all_vars.push(temp) unless all_vars.include? temp 
 	end
+end
+
+
+
+#prints vars
+# count = 0
+# programs.each do |program|
+# 	puts "---Program #{count}"
+# 	count += 1
+# 	puts "\tFunctions: "
+# 	program.functions.each do |key,value| 
+# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
+# 	end
+	# puts "\tVariables: "
+	# program.vars.each do |key,value|
+	# 	puts "Type: #{key} Count: #{value}"
+	# end
+# 	puts "\tDefines: "
+# 	 #print program.defines
+# 	program.defines.each do |key,value|
+# 		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
+# 	end
+
+# 	puts "\tIncludes: "
+# 	program.headers.each do |item|
+# 		puts "\t\t#{item}"
+# 	end
+
+# 	puts "\tLoops: "
+# 	program.loops.each do |key,value|
+# 		puts "\t\t#{key}: #{value}"
+# 	end
+
+# 	puts "\tCOnditionals: "
+# 	program.conditionals.each do |key,value|
+# 		puts "#\t\t#{key}: #{value}"
+# 	end
+# end
+
+
+
+#count each var
+program_index = 0
+all_vars.each do |key|
+	var_name = key.name
+	key.countA = 0
+	if programs[0].vars.has_key? var_name then
+		key.countA += programs[0].vars[var_name]
+	end
+	key.countB = 0	
+	if programs[1].vars.has_key? var_name then
+		key.countB += programs[1].vars[var_name]
+	end
+end
+
+#Var Report
+print " "
+print "=" * 71
+print "\n"
+print "|"
+print "\t" * 4
+print "Variables"
+print "\t" * ((71-24)/4).ceil
+print "\t|"
+print "\n"
+print "|"
+print "-"*71
+print "|\n"
+all_vars.each do |key|
+	size = key.name.size + 1 #plus the first pipe
+	tabs = ((50-size)/4).ceil
+	puts "|#{key.name} " +"\t"*tabs+ " |\t#{key.countA}\t|\t#{key.countB}\t|\t#{(key.countA-key.countB).abs}\t|"
+	print "|"
+	print "-"*71
+	print "|\n"
+end
+#count = 0
+#print code
+# programs.each do |program|
+# 	puts "==Program: #{count}=="
+# 	program.code.each do |block| 
+# 		block.each do |line| 
+# 		 	print "\t" +line 
+
+# 			case programs[0].is_var?(line)
+# 			when true
+# 				print "\t--Variable\n"
+# 			when false 
+# 				print"\t--Function\n"
+# 			when nil 
+# 				print "\n"
+# 			end
+# 		end
+# 	end
 		
 	
-	count += 1
-end
+# 	count += 1
+# end
 
 #Count the functions
 # program_index = 0
@@ -90,40 +193,40 @@ end
 
 
 #Print the signatures and vars
-count = 0
-programs.each do |program|
-	puts "---Program #{count}"
-	count += 1
-	puts "\tFunctions: "
-	program.functions.each do |key,value| 
-		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
-	end
-	#puts program.vars
-	puts "\tVariables: "
-	program.vars.each do |key,value|
-		puts "Type: #{key} Count: #{value}"
-	end
-	puts "\tDefines: "
-	 #print program.defines
-	program.defines.each do |key,value|
-		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
-	end
+# count = 0
+# programs.each do |program|
+# 	puts "---Program #{count}"
+# 	count += 1
+# 	puts "\tFunctions: "
+# 	program.functions.each do |key,value| 
+# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
+# 	end
+# 	#puts program.vars
+# 	puts "\tVariables: "
+# 	program.vars.each do |key,value|
+# 		puts "Type: #{key} Count: #{value}"
+# 	end
+# 	puts "\tDefines: "
+# 	 #print program.defines
+# 	program.defines.each do |key,value|
+# 		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
+# 	end
 
-	puts "\tIncludes: "
-	program.headers.each do |item|
-		puts "\t\t#{item}"
-	end
+# 	puts "\tIncludes: "
+# 	program.headers.each do |item|
+# 		puts "\t\t#{item}"
+# 	end
 
-	puts "\tLoops: "
-	program.loops.each do |key,value|
-		puts "\t\t#{key}: #{value}"
-	end
+# 	puts "\tLoops: "
+# 	program.loops.each do |key,value|
+# 		puts "\t\t#{key}: #{value}"
+# 	end
 
-	puts "\tCOnditionals: "
-	program.conditionals.each do |key,value|
-		puts "#\t\t#{key}: #{value}"
-	end
-end
+# 	puts "\tCOnditionals: "
+# 	program.conditionals.each do |key,value|
+# 		puts "#\t\t#{key}: #{value}"
+# 	end
+# end
 
 #Print vars
 

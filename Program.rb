@@ -11,15 +11,10 @@ class Program
 		@headers = Array.new(0)
 		@defines = Hash.new()
 		@functions = Hash.new(0) 
-		@vars = Hash.new() #Main variables only
+		@vars = Hash.new()
 		@exploded = false
 		@loops = {:for => 0,:while => 0}
 		@conditionals = {:if => 0, :switch => 0}
-		print @loops 
-		print "\n"
-		print @conditionals
-		print "\n"
-		puts @loops[:for] += 1
 		self.get_functions()
 		self.count_functions()
 		self.set_vars()
@@ -33,7 +28,7 @@ class Program
 		@code.each do |block|
 			block.each do |line|
 				line = line.gsub(" ","")
-				puts "===#{line}"
+				#puts "===#{line}"
 				if line.start_with? "if(" then
 					@conditionals[:if] += 1
 				elsif line.start_with? "switch(" then
@@ -141,7 +136,7 @@ class Program
 			end
 			line_index = 0
 			block.each do |line|
-				puts line
+				#puts line
 				if is_var?(line) != true then #discard functions and code body
 					next 
 				end

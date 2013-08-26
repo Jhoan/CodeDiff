@@ -19,3 +19,5 @@ doc/
 
 #user defined
 output.txt
+test.*
+a.out

@@ -1,5 +1,5 @@
 #makekefile for build the ProyProc.js
-NAMES=Function Program common main
+NAMES=Header Program main
 SOURCES=$(addsuffix .rb,$(addprefix ./,$(NAMES)))
 
 all: clean
