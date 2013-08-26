@@ -307,12 +307,17 @@ class Program
 	def is_var?(line) 
 
 		raise ArgumentError, "Expected String but got #{line.class.name} instead" unless line.is_a? String
-		
-		
-
+		#In order to detect casting, a var can't contain "()" and "="
+		flag = false
+		if line.include? "(" 
+			if line.include? "=" then
+				flag = true
+			end
+		end
 		tokens = line.gsub(" ", ",").gsub("(", ",").gsub(")",",").split(",").map(&:strip).reject(&:empty?)
 		type_matches = 0
 		spec_matches = 0
+		
 		tokens.each do |token|
 			if @type.include? token then
 				type_matches += 1
@@ -323,7 +328,7 @@ class Program
 		end
 		#print "TypeMatches: #{type_matches} SpecMatches: #{spec_matches}"
 		return false if type_matches > 1
-		return true if spec_matches >= 0 && type_matches == 1
+		return true if spec_matches >= 0 && type_matches == 1 && flag == false
 		return nil
 	end
 

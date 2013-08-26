@@ -10,6 +10,8 @@ int main(void){
 	float p[3];
 	float h[3];
 	char **j;
+	volatile unsigned double *vud,vud2,vud3,vud4;
+	vud = (volatile unsigned double *)malloc(BANDERA*3);
 	boo(arg,arg,arg)
 	printf("Ingresa 2 numeros: ");
 	boo(arg,arg,arg)
@@ -22,6 +24,8 @@ int main(void){
 	return 0;
 }
 int suma(int i,int j){
+	too(arg,arg,arg);
+
 	return i+j;
 }
 void foo(int** a, float (*some)[BANDERA], unsigned long int omg)

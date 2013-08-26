@@ -6,6 +6,7 @@ int main(void){
 	float p[3];
 	float h[BANDERA];
 	char **j;
+	j = (char **) malloc(BANDERA);
 	printf("Ingresa 2 numeros: ");
 	scanf("%d %d",&a,&b);
 	printf("La suma es: %d \n",suma(a,b));

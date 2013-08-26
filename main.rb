@@ -277,10 +277,10 @@ print "|"
 print "-"*111
 print "|\n"
 all_vars.each do |key|
-	size = key.name.size + 1 #plus the first pipe
-	tabs = ((90-size)/4).ceil
-	if tabs > 0 then
-		print "|#{key.name} " +"\t"*tabs
+	size = key.name.size #plus the first pipe
+	spaces = 87-size
+	if spaces > 0 then
+			print "|#{key.name} " +" "*spaces
 	else
 		if size > 63 then
 			print "|#{key.name.slice(0,60)} " + " " * 50 +"|\n"
@@ -452,5 +452,5 @@ all_control_structures.each do |key|
 	calls += (key.countA-key.countB).abs
 end
 
-print "\t" * 23 + "Subtotal: \t|#{counts}|\t#{calls}\t|"
-
+print "\t" * 23 + "Subtotal: \t|#{counts}|\t#{calls}\t\n"
+print "\t" * 20 + "Degree of Similarity:\t#{counts+calls}"
