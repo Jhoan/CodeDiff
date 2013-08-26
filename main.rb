@@ -2,7 +2,7 @@
 
 files = Array.new()
 next_file = String.new()
-raise ArgumentError, "Two filenames expected." unless ARGV.size >= 2
+raise ArgumentError, "Two filenames expected." unless ARGV.size == 2
 #We make sure we can read the files 
 begin
 	ARGV.each  do |arg|
@@ -13,7 +13,7 @@ begin
 		end
 	end
 rescue 
-	puts "Can not read file #{next_file}"
+	puts "Can not read the file #{next_file}"
 	abort()
 end
 
