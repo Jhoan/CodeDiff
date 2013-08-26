@@ -1,16 +1,16 @@
 #include<stdio.h>
-#define N 3
+#define BANDERA 3
 #include<stdlib.h>>
 int main(void){
 	int a,b;
 	float p[3];
-	float h[3];
+	float h[BANDERA];
 	char **j;
 	printf("Ingresa 2 numeros: ");
 	scanf("%d %d",&a,&b);
 	printf("La suma es: %d \n",suma(a,b));
 	for (b = 0; b<10;b++)
-		a==b;
+		a==BANDERA;
 	
 	return 0;
 }

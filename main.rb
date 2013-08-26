@@ -117,7 +117,6 @@ first_program_functions.each do |f|
 	all_functions.push(f)
 end
 
-
 second_program_functions.each do |second_f|
 	sig = second_f.name
 	index_found = -1
@@ -144,48 +143,53 @@ second_program_functions.each do |second_f|
 
 end
 
-# print first_program_functions
-# print "\n"
-# print second_program_functions
-# print "\n\n\n\n"
-# print all_functions
+#extract defines 
+
+all_defines = Array.new
+programs[0].defines.each do |key, value|
+	temp = OpenStruct.new
+	if key[1].include? "(" then
+		temp.name = key[1]
+	else
+		temp.name = key[0]
+	end
+	temp.count = 1
+	temp.calls = value
+	all_defines.push(temp)
+end
+
+programs[1].defines.each do |key,value|
+	if key[1].include? "(" then
+		new_name = key[1]
+	else
+		new_name = key[0]
+	end
+
+	index_found = -1
+	index = 0
+	all_defines.each do |existing_name| #find duplicates
+		if new_name == existing_name.name then
+			index_found = index
+			break
+		end
+		index += 1
+	end
+	if index_found < 0 then #not duplicate
+		temp = OpenStruct.new
+		temp.name = new_name
+		temp.countB = 1
+		temp.callsB = value
+		temp.count = 0
+		temp.calls = 0
+		all_defines.push(temp)
+	else
+		all_defines[index_found].countB = 1
+		all_defines[index_found].callsB = value
+	end
+
+end
 
 
-
-# prints data
-# count = 0
-# programs.each do |program|
-# 	puts "---Program #{count}"
-# 	count += 1
-# 	puts "\tFunctions: "
-# 	program.functions.each do |key,value| 
-# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
-# 	end
-	# puts "\tVariables: "
-	# program.vars.each do |key,value|
-	# 	puts "Type: #{key} Count: #{value}"
-	# end
-# 	puts "\tDefines: "
-# 	 #print program.defines
-# 	program.defines.each do |key,value|
-# 		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
-# 	end
-
-# 	puts "\tIncludes: "
-# 	program.headers.each do |item|
-# 		puts "\t\t#{item}"
-# 	end
-
-# 	puts "\tLoops: "
-# 	program.loops.each do |key,value|
-# 		puts "\t\t#{key}: #{value}"
-# 	end
-
-# 	puts "\tCOnditionals: "
-# 	program.conditionals.each do |key,value|
-# 		puts "#\t\t#{key}: #{value}"
-# 	end
-# end
 
 #Report Header
 print " "
@@ -274,3 +278,42 @@ all_functions.each do |key|
 	print "-"*111
 	print "|\n"
 end
+
+#Defines Report
+print " "
+print "=" * 112
+print "\n"
+print "|"
+print "\t" * 4
+print "Defines  "
+print "\t" * ((112-24)/4).ceil
+print "|"
+print "\n"
+print "|"
+print "-"*111
+print "|\n"
+
+all_defines.each do |key|
+	size = key.name.size + 1 #plus the first pipe
+	tabs = ((90-size)/4).ceil
+	if tabs > 0 then
+		print "|#{key.name} " +"\t"*tabs
+	else
+		if size > 63 then
+			print "|#{key.name.slice(0,60)} " + " " * 50 +"|\n"
+			print "|\t#{key.name.slice(60,key.name.size-60)}"
+			spaces = 90 - (key.name.size - 60) - 6
+			print " " *spaces
+
+		else
+			spaces = 63 - size
+			print "|#{key.name}" + " "*spaces
+		end
+	end
+	print " |#{key.count}| #{key.calls}  |#{key.countB}| #{key.callsB}   |#{(key.count-key.countB).abs}| #{(key.calls-key.callsB).abs}   |"
+	print "\n|"	
+	print "-"*111
+	print "|\n"
+end
+
+

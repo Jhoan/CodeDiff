@@ -1,4 +1,8 @@
 #include<stdio.h>
+ #define getc(p) (--(p)->cnt >= 0 \
+           ? (unsigned char) \
+             *(p)->ptr++ : _fillbuf(p))
+#define BANDERA 3
 void foo(int**, float (*)[], unsigned long int);
 void boo(int**, float (*)[], unsigned long float);
 int main(void){
@@ -18,7 +22,7 @@ int main(void){
 int suma(int i,int j){
 	return i+j;
 }
-void foo(int** a, float (*some)[], unsigned long int omg)
+void foo(int** a, float (*some)[BANDERA], unsigned long int omg)
 {
 	suma(ad,as);
 	return NULL;
