@@ -1,5 +1,13 @@
 #!/usr/bin/env ruby
 
+a = ["   fdsjlfdlkj    "," ,smfsjdkl"]
+a.each do |line|
+	line = line.strip()
+	if line.start_with? "fds"
+		puts "holoa"
+	end
+		
+end
 #Class: Program
 class Program
 	
@@ -15,12 +23,38 @@ class Program
 		@functions = Hash.new(0) 
 		@vars = Hash.new() #Main variables only
 		@exploded = false
+		@loops = {:for => 0,:while => 0}
+		@conditionals = {:if => 0, :switch => 0}
+		print @loops 
+		print "\n"
+		print @conditionals
+		print "\n"
+		puts @loops[:for] += 1
 		self.get_functions()
 		self.count_functions()
 		self.set_vars()
 		self.get_defines()
 		self.count_defines()
 		self.set_headers()
+		self.set_control_structures()
+	end
+
+	def set_control_structures() #extracts and counts loops and conditionals
+		@code.each do |block|
+			block.each do |line|
+				line = line.gsub(" ","")
+				puts "===#{line}"
+				if line.start_with? "if(" then
+					@conditionals[:if] += 1
+				elsif line.start_with? "switch(" then
+					@conditionals[:switch] += 1
+				elsif line.start_with? "for(" then
+					@loops[:for] += 1
+				elsif line.include? "while(" then
+					@loops[:while] += 1
+				end
+			end
+		end
 	end
 	def set_headers()
 		#theoretically, the #include directives can be placed anywhere in the code
@@ -362,9 +396,8 @@ class Program
 		attr_reader :vars
 		attr_reader :defines
 		attr_reader :headers
-		private :get_name 
-		
-		#private :is_var?
+		attr_reader :loops
+		attr_reader :conditionals
 
 
 end
@@ -484,7 +517,17 @@ programs.each do |program|
 
 	puts "\tIncludes: "
 	program.headers.each do |item|
-		puts item
+		puts "\t\t#{item}"
+	end
+
+	puts "\tLoops: "
+	program.loops.each do |key,value|
+		puts "\t\t#{key}: #{value}"
+	end
+
+	puts "\tCOnditionals: "
+	program.conditionals.each do |key,value|
+		puts "#\t\t#{key}: #{value}"
 	end
 end
 

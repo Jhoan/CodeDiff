@@ -111,7 +111,17 @@ programs.each do |program|
 
 	puts "\tIncludes: "
 	program.headers.each do |item|
-		puts item
+		puts "\t\t#{item}"
+	end
+
+	puts "\tLoops: "
+	program.loops.each do |key,value|
+		puts "\t\t#{key}: #{value}"
+	end
+
+	puts "\tCOnditionals: "
+	program.conditionals.each do |key,value|
+		puts "#\t\t#{key}: #{value}"
 	end
 end
 
