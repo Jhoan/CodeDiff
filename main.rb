@@ -94,12 +94,19 @@ count = 0
 programs.each do |program|
 	puts "---Program #{count}"
 	count += 1
+	puts "\tFunctions: "
 	program.functions.each do |key,value| 
 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
 	end
-	puts program.vars
+	#puts program.vars
+	puts "\tVariables: "
 	program.vars.each do |key,value|
 		puts "Type: #{key} Count: #{value}"
+	end
+	puts "\tDefines: "
+	 #print program.defines
+	program.defines.each do |key,value|
+		puts "Type: #{key[0]} Count: #{value} Definition: #{key[1]}"
 	end
 end
 

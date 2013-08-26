@@ -16,8 +16,58 @@ class Program
 		self.get_functions()
 		self.count_functions()
 		self.set_vars()
+		self.get_defines()
 	end
+	def get_defines()
+		macro = ""
+		flag = false
+		output = {}
+		@code.each do |block|
+			flag = false
+			block.each do |line|
+				#puts "next: #{line}"
+				#puts "last_char: #{line.strip[-1]}"
+				if line.include?("#define") then
+					if line.strip[-1] != "\\" then #single line macro
+						temp = line.gsub("#define","").strip.split(" ",2)
+						name = temp[0]
+						definition = temp[1]
+					else #multiline macro
+						flag = true
+						macro.concat(line.gsub("#define","") + " ")
+					end
+				elsif flag == true #reading macro
+					if line.strip[-1] == "\\"
+						macro.concat(line)
+					else 
+						flag = false #stop reading macro
+						macro.concat(line)
+						macro = macro.strip
+						#puts "FINAL MACRO #{macro}"
+						index_delimiter = macro.index("(")
+						if macro.index(" ") < index_delimiter then
+							index_delimiter = macro.index(" ")
+						end
+						name = macro.slice(0,index_delimiter)
+						definition = macro
+						
+					end
+				else
+					#puts "else: #{line}"
+					next
+				end
+				#puts "macro: #{macro}"
+				if flag == false then
+					temp = []
+					temp.push(name)
+					temp.push(definition.gsub("\\",""))
+					output[temp] = 0
+				end
 
+			end
+		end
+		@defines = output
+	end
 	def set_vars() #Extracts and counts the variables in @code
 		output = Hash.new(0)
 		self.explode! unless @exploded
@@ -267,6 +317,7 @@ class Program
 		attr_reader :code
 		attr_reader :functions
 		attr_reader :vars
+		attr_reader :defines
 		private :get_name 
 		
 		#private :is_var?

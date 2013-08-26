@@ -177,8 +177,8 @@ file = file.gsub(";", "\n").split("\n").map(&:strip).reject(&:empty?)
 code = explode!(file)
 macro = ""
 flag = false
-hash = {}
-code.each do |block|
+output = {}
+@code.each do |block|
 	flag = false
 	block.each do |line|
 		#puts "next: #{line}"
@@ -217,12 +217,12 @@ code.each do |block|
 			temp = []
 			temp.push(name)
 			temp.push(definition.gsub("\\",""))
-			hash[temp] = 0
+			output[temp] = 0
 		end
 
 		
-		#hash[name + definition] = 0
+		#output[name + definition] = 0
 	end
 end
 
-print hash
+print output
