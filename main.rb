@@ -189,7 +189,29 @@ programs[1].defines.each do |key,value|
 
 end
 
+#Headers Report:
+all_headers = Array.new()
 
+#Recover all distinct variables
+programs.each do |program|
+	program.headers.each do |var|
+		temp = OpenStruct.new
+		temp.name = var
+		all_headers.push(temp) unless all_headers.include? temp 
+	end
+end
+#count each var
+all_headers.each do |key|
+	var_name = key.name
+	key.countA = 0
+	if programs[0].headers.include? var_name then
+		key.countA = 1
+	end
+	key.countB = 0	
+	if programs[1].headers.include? var_name then
+		key.countB += 1
+	end
+end
 
 #Report Header
 print " "
@@ -312,6 +334,41 @@ all_defines.each do |key|
 	end
 	print " |#{key.count}| #{key.calls}  |#{key.countB}| #{key.callsB}   |#{(key.count-key.countB).abs}| #{(key.calls-key.callsB).abs}   |"
 	print "\n|"	
+	print "-"*111
+	print "|\n"
+end
+
+#Header Report
+print " "
+print "=" * 112
+print "\n"
+print "|"
+print "\t" * 4
+print "Headers  "
+print "\t" * ((112-24)/4).ceil
+print "|"
+print "\n"
+print "|"
+print "-"*111
+print "|\n"
+all_headers.each do |key|
+	size = key.name.size + 1 #plus the first pipe
+	tabs = ((90-size)/4).ceil
+	if tabs > 0 then
+		print "|#{key.name} " +"\t"*tabs
+	else
+		if size > 63 then
+			print "|#{key.name.slice(0,60)} " + " " * 50 +"|\n"
+			print "|\t#{key.name.slice(60,key.name.size-60)}"
+			spaces = 90 - (key.name.size - 60) - 6
+			print " " * spaces
+		else
+			spaces = 63 - size
+			print "|#{key.name}" + " "*spaces
+		end
+	end
+	print "|\t#{key.countA}\t|\t#{key.countB}\t|\t#{(key.countA-key.countB).abs}\t|"
+	print "\n|"
 	print "-"*111
 	print "|\n"
 end

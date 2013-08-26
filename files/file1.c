@@ -1,6 +1,6 @@
 #include<stdio.h>
 #define BANDERA 3
-#include<stdlib.h>>
+#include<stdlib.h>
 int main(void){
 	int a,b;
 	float p[3];
