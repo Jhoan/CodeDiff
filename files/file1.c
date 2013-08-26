@@ -17,3 +17,6 @@ int main(void){
 int suma(int i,int j){
 	return i+j;
 }
+int resta(int i,int j){
+	return i-j;
+}

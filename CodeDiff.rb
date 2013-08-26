@@ -452,18 +452,53 @@ programs.each do |program|
 		all_vars.push(temp) unless all_vars.include? temp 
 	end
 end
+#count each var
+all_vars.each do |key|
+	var_name = key.name
+	key.countA = 0
+	if programs[0].vars.has_key? var_name then
+		key.countA += programs[0].vars[var_name]
+	end
+	key.countB = 0	
+	if programs[1].vars.has_key? var_name then
+		key.countB += programs[1].vars[var_name]
+	end
+end
+#Functions report
+#Extract all signatures
+all_functions = Array.new()
+programs.each do |program|
+	program.functions.each_key do |var|
+		signature = program.get_signature(var)
+		temp = OpenStruct.new
+		temp.name = signature
+		all_functions.push(temp) unless all_functions.include? temp
+	end
+end
+# all_functions.each do |key|
+# 	var_name = key.name
+# 	key.countA = 0
+# 	key.callsA = 0
+# 	if programs[0].functions.has_key? var_name then
+# 		key.countA += programs[0].vars[var_name]
+# 	end
+# 	key.countB = 0	
+# 	if programs[1].vars.has_key? var_name then
+# 		key.countB += programs[1].vars[var_name]
+# 	end
+# end
 
 
 
 #prints vars
-# count = 0
-# programs.each do |program|
-# 	puts "---Program #{count}"
-# 	count += 1
-# 	puts "\tFunctions: "
-# 	program.functions.each do |key,value| 
-# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
-# 	end
+count = 0
+programs.each do |program|
+	puts "---Program #{count}"
+	count += 1
+	puts "\tFunctions: "
+	program.functions.each do |key,value| 
+		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
+	end
 	# puts "\tVariables: "
 	# program.vars.each do |key,value|
 	# 	puts "Type: #{key} Count: #{value}"
@@ -488,23 +523,14 @@ end
 # 	program.conditionals.each do |key,value|
 # 		puts "#\t\t#{key}: #{value}"
 # 	end
-# end
-
-
-
-#count each var
-program_index = 0
-all_vars.each do |key|
-	var_name = key.name
-	key.countA = 0
-	if programs[0].vars.has_key? var_name then
-		key.countA += programs[0].vars[var_name]
-	end
-	key.countB = 0	
-	if programs[1].vars.has_key? var_name then
-		key.countB += programs[1].vars[var_name]
-	end
 end
+
+
+
+
+
+
+#Var Report
 print " "
 print "=" * 71
 print "\n"
