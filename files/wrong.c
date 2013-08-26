@@ -17,7 +17,6 @@ int main(void){
 
 
 	printf("%d",COMPUESTO);
-	for
 }
 float **bar(int a, long long double b){
 	return NULL

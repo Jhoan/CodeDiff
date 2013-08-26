@@ -76,13 +76,14 @@ end
 #Extract all signatures
 
 first_program_functions = Array.new()
-programs[0].functions.each_key do |var|
+programs[0].functions.each do |var,calls|
 	found_index = -1
 	index = 0
 	signature = programs[0].get_signature(var)
 	temp = OpenStruct.new
 	temp.name = signature
 	temp.count = 1
+	temp.calls = calls
 	first_program_functions.each do |f| #find duplicate
 		if f.name == temp.name then
 			found_index = index
@@ -94,10 +95,74 @@ programs[0].functions.each_key do |var|
 		first_program_functions.push(temp)
 	else #add count
 		first_program_functions[found_index].count += 1
+		first_program_functions[found_index].calls += calls
 	end
 end
-print "****"
-print first_program_functions
+
+second_program_functions = Array.new()
+programs[1].functions.each do |var,calls|
+	found_index = -1
+	index = 0
+	signature = programs[1].get_signature(var)
+	temp = OpenStruct.new
+	temp.name = signature
+	temp.count = 1
+	temp.calls = calls
+	second_program_functions.each do |f| #find duplicate
+		if f.name == temp.name then
+			found_index = index
+			break
+		end
+		index += 1
+	end
+	if found_index < 0 then #new function 
+		second_program_functions.push(temp)
+	else #add count
+		second_program_functions[found_index].count += 1
+		second_program_functions[found_index].calls += calls
+	end
+end
+
+#merge functions
+all_functions = Array.new
+first_program_functions.each do |f|
+	all_functions.push(f)
+end
+
+
+second_program_functions.each do |second_f|
+	sig = second_f.name
+	index_found = -1
+	index = 0
+	all_functions.each do |existing_f| #find duplicates
+		if sig == existing_f.name then
+			index_found = index
+			break
+		end
+		index += 1
+	end
+	if index_found < 0 then #not duplicate
+		temp = OpenStruct.new
+		temp.name = sig
+		temp.countB = second_f.count 
+		temp.callsB = second_f.calls
+		temp.count = 0
+		temp.calls = 0
+		all_functions.push(temp)
+	else
+		all_functions[index_found].countB = second_f.count
+		all_functions[index_found].callsB = second_f.calls
+	end
+
+end
+
+# print first_program_functions
+# print "\n"
+# print second_program_functions
+# print "\n\n\n\n"
+# print all_functions
+
+
 # all_functions.each do |key|
 # 	var_name = key.name
 # 	key.countA = 0
@@ -113,7 +178,7 @@ print first_program_functions
 
 
 
-#prints vars
+# prints vars
 # count = 0
 # programs.each do |program|
 # 	puts "---Program #{count}"

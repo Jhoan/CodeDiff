@@ -1,5 +1,5 @@
 #include<stdio.h>
-void foo(int**, float (*)[], unsigned long float);
+void foo(int**, float (*)[], unsigned long int);
 void boo(int**, float (*)[], unsigned long float);
 int main(void){
 	int a,b;
@@ -18,7 +18,7 @@ int main(void){
 int suma(int i,int j){
 	return i+j;
 }
-void foo(int** a, float (*some)[], unsigned long float omg)
+void foo(int** a, float (*some)[], unsigned long int omg)
 {
 	suma(ad,as);
 	return NULL;
