@@ -15,4 +15,12 @@
 # end
 
 # puts "++++#{table[0] == table[1]}"
-puts 3.5.round
+a = [1,2,3,4,5,6,7]
+a.map! do |e|
+	if e > 3 then
+		0
+	else
+		e
+	end
+end
+print a

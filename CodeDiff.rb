@@ -466,15 +466,30 @@ all_vars.each do |key|
 end
 #Functions report
 #Extract all signatures
-all_functions = Array.new()
-programs.each do |program|
-	program.functions.each_key do |var|
-		signature = program.get_signature(var)
-		temp = OpenStruct.new
-		temp.name = signature
-		all_functions.push(temp) unless all_functions.include? temp
+
+first_program_functions = Array.new()
+programs[0].functions.each_key do |var|
+	found_index = -1
+	index = 0
+	signature = programs[0].get_signature(var)
+	temp = OpenStruct.new
+	temp.name = signature
+	temp.count = 1
+	first_program_functions.each do |f| #find duplicate
+		if f.name == temp.name then
+			found_index = index
+			break
+		end
+		index += 1
+	end
+	if found_index < 0 then #new function 
+		first_program_functions.push(temp)
+	else #add count
+		first_program_functions[found_index].count += 1
 	end
 end
+print "****"
+print first_program_functions
 # all_functions.each do |key|
 # 	var_name = key.name
 # 	key.countA = 0
@@ -491,14 +506,14 @@ end
 
 
 #prints vars
-count = 0
-programs.each do |program|
-	puts "---Program #{count}"
-	count += 1
-	puts "\tFunctions: "
-	program.functions.each do |key,value| 
-		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
-	end
+# count = 0
+# programs.each do |program|
+# 	puts "---Program #{count}"
+# 	count += 1
+# 	puts "\tFunctions: "
+# 	program.functions.each do |key,value| 
+# 		puts "Name: #{key} Count: #{value} Signature: #{program.get_signature(key)}"
+# 	end
 	# puts "\tVariables: "
 	# program.vars.each do |key,value|
 	# 	puts "Type: #{key} Count: #{value}"
@@ -523,7 +538,7 @@ programs.each do |program|
 # 	program.conditionals.each do |key,value|
 # 		puts "#\t\t#{key}: #{value}"
 # 	end
-end
+# end
 
 
 
