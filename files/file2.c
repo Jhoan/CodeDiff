@@ -1,4 +1,5 @@
 #include<stdio.h>
+
  #define getc(p) (--(p)->cnt >= 0 \
            ? (unsigned char) \
              *(p)->ptr++ : _fillbuf(p))
@@ -6,19 +7,22 @@
 void foo(int**, float (*)[], unsigned long int);
 void boo(int**, float (*)[], unsigned long float);
 int main(void){
-	int a,b;
-	float p[3];
-	float h[3];
-	char **j;
-	volatile unsigned double *vud,vud2,vud3,vud4;
+	int a=2,b=4;
+	float p2[3];
+	float h2[3];
+	char **j2;
+	volatile unsigned double *vud,vud2,vud3,vud4; 
+	const signed short int (**point)[10], **some_var;
 	vud = (volatile unsigned double *)malloc(BANDERA*3);
 	boo(arg,arg,arg)
-	printf("Ingresa 2 numeros: ");
+	printf("Ingresa 2 numeros tipo int: "); 
 	boo(arg,arg,arg)
 	scanf("%d %d",&a,&b);
-	printf("La suma es: %d \n",suma(a,b));
+	printf("La suma es: %d \n",suma(a,b)); 
 	foo(arg,arg2,arg3);
 	while (true){
+		for ( ; ; ) 
+			b = 2
 		a=1;
 	}
 	return 0;

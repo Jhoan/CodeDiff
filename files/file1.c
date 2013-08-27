@@ -6,16 +6,21 @@ int main(void){
 	float p[3];
 	float h[BANDERA];
 	char **j;
-	j = (char **) malloc(BANDERA);
+	j = (char **) malloc(BANDERA); 
 	printf("Ingresa 2 numeros: ");
 	scanf("%d %d",&a,&b);
 	printf("La suma es: %d \n",suma(a,b));
 	for (b = 0; b<10;b++)
 		a==BANDERA;
-	
+	switch (a)
+		case "1":
+			if cond == true  
+				printf("Algo");
+		  	else if
+				printf("Otra");
 	return 0;
 }
-int suma(int i,int j){
+int suma(int i,int j)
 	return i+j;
 }
 int resta(int i,int j){
