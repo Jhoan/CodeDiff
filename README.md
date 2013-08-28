@@ -4,11 +4,13 @@ CodeDiff
 A ruby implementation of an ANSI C code analyzer. 
 
 Requirements:
+
 	This program requires ruby 1.9.3 or better.
 		To install it just run $sudo pacman -S ruby.
 		Alternatively, open the folder "ruby" and run the install script.
 
 Usage:
+
 	Run the "$make" command.
 	Run $./CodeDiff.rb "file1" "file2" > "output.txt".
 	Open the file "output.txt" with your favorite text editor (for a proper visualization of the data the tab width must be 4).
@@ -16,10 +18,12 @@ Usage:
 
 
 Additional info:
+
 	Two test files have been included, both are located in the folder test_files, it is recommended that you open those files to see some of the program's  features. (Please note that those files are for test purposes only).
 
 
 Known Bugs:
+
 	Odd results.
 		When initializing variables at the same time they are declared:
 			"int a=2;b=3".
