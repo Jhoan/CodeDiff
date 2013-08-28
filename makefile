@@ -1,6 +1,6 @@
 #makekefile for build the ProyProc.js
-NAMES=Header Program main
-SOURCES=$(addsuffix .rb,$(addprefix ./,$(NAMES)))
+NAMES=Header Program Report main
+SOURCES=$(addsuffix .rb,$(addprefix ./src/,$(NAMES)))
 
 all: clean
 	@cat $(SOURCES) > CodeDiff.rb
