@@ -8,7 +8,8 @@ begin
 	ARGV.each  do |arg|
 		next_file = arg
 		File.open(arg,"r") do |file| 
-			files.push(file.read) 
+			#The following REGEX will remove any comments from the files
+			files.push(file.read.gsub(/(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/.*)/,"")) 
 			file.close
 		end
 	end

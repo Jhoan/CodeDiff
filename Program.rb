@@ -52,7 +52,7 @@ class Program
 		@code[0].each do |line|
 			if line.start_with? "#include" then
 				#puts "====#{line}===="
-				@headers.push(line[8..-1])
+				@headers.push(line[8..-1].strip)
 			end
 		end
 		#print @headers

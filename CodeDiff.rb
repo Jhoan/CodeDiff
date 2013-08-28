@@ -55,7 +55,7 @@ class Program
 		@code[0].each do |line|
 			if line.start_with? "#include" then
 				#puts "====#{line}===="
-				@headers.push(line[8..-1])
+				@headers.push(line[8..-1].strip)
 			end
 		end
 		#print @headers
@@ -412,7 +412,8 @@ begin
 	ARGV.each  do |arg|
 		next_file = arg
 		File.open(arg,"r") do |file| 
-			files.push(file.read) 
+			#The following REGEX will remove any comments from the files
+			files.push(file.read.gsub(/(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/.*)/,"")) 
 			file.close
 		end
 	end

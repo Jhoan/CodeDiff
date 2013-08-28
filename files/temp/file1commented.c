@@ -1,6 +1,7 @@
 #include<stdio.h>
 #define BANDERA 3
 #include<stdlib.h>
+#include"biblioteca.h"
 int main(void){//void specification is mandatory
 	int a,b;//Support for  multiple variable declarations
 	float p[3];
